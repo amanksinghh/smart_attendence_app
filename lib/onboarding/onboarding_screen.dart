@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../pages/login_utils/login.dart';
 import '../pages/login_utils/login_page.dart';
 import 'onboarding_contents.dart';
 import 'size_config.dart';

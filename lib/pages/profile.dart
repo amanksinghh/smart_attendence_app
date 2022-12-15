@@ -117,7 +117,7 @@ class Profile extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyHomePage()),
+                    MaterialPageRoute(builder: (context) => HomePage()),
                   );
                 },
                 icon: Icon(

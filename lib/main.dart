@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:smart_attendence_app/onboarding/onboarding_screen.dart';
+import 'package:smart_attendence_app/pages/login_utils/login.dart';
 import 'package:smart_attendence_app/pages/login_utils/login_page.dart';
 import 'package:smart_attendence_app/pages/root_app.dart';
 import 'package:smart_attendence_app/services/locator.dart';
@@ -12,11 +13,11 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
-final routes = {
-  '/': (context) => OnboardingScreen(),
-  '/root': (context) => RootApp(),
-  "/login": (context) => LoginPage(),
-};
+// final routes = {
+//   '/': (context) => OnboardingScreen(),
+//   '/root': (context) => RootApp(),
+//   "/login": (context) => LoginPage(),
+// };
 
 void main() {
   setupServices();
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               duration: 2000, // splash screen
-              nextScreen: OnboardingScreen(),
+              nextScreen: LoginPage(),
               splashTransition: SplashTransition.scaleTransition,
               pageTransitionType: PageTransitionType.fade,
               backgroundColor: Color.fromARGB(255, 255, 254, 254))),

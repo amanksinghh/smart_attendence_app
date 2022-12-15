@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_attendence_app/pages/homepage/homepage.dart';
+import 'package:flutter_login/flutter_login.dart';
 
 import '../root_app.dart';
 
@@ -39,7 +41,6 @@ class LoginPageState extends State<LoginPage>
 
   Future<void> _authenticate() async {
     bool authenticated = false;
-
     try {
       // ignore: deprecated_member_use
       authenticated = await auth.authenticate(
@@ -254,6 +255,7 @@ class LoginPageState extends State<LoginPage>
                             MaterialButton(
                               onPressed: () {
                                 login();
+                                //Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
                               },
                               child: Text("Login"),
                               color: Color.fromARGB(255, 240, 96, 30),
