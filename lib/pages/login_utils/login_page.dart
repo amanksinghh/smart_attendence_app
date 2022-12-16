@@ -7,9 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_attendence_app/api_models/user_response.dart';
 import 'package:smart_attendence_app/pages/homepage/homepage.dart';
 import 'package:flutter_login/flutter_login.dart';
 
+import '../../api_models/user_login.dart';
 import '../root_app.dart';
 
 class LoginPage extends StatefulWidget {
@@ -40,6 +42,8 @@ class LoginPageState extends State<LoginPage>
   String authorized = " Not authorized";
   bool _canCheckBiometric = false;
   late List<BiometricType> _availableBiometric;
+  List<Data>? userData;
+  late Data _data;
 
   Future<void> _authenticate() async {
     bool authenticated = false;
@@ -51,7 +55,6 @@ class LoginPageState extends State<LoginPage>
     } on PlatformException catch (e) {
       print(e);
     }
-
     setState(() {
       authorized =
           authenticated ? "Authorized success" : "Failed to authenticate";
@@ -70,7 +73,6 @@ class LoginPageState extends State<LoginPage>
 
   Future<void> _checkBiometric() async {
     bool canCheckBiometric = false;
-
     try {
       canCheckBiometric = await auth.canCheckBiometrics;
     } on PlatformException catch (e) {
@@ -98,31 +100,60 @@ class LoginPageState extends State<LoginPage>
     });
   }
 
-
   ///Login Functionality
   Future<void> login() async {
 
-    var data = {'email': emailController.text, 'password' : passwordController.text};
+    Map data = {
+      "email": emailController.text,
+      "password" : passwordController.text
+    };
+    //encode Map to JSON
+    String body = json.encode(data);
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      var url = 'https://attandance-server.onrender.com/user/login';
       Response response = await http.post(
-          Uri.parse('https://attandance-server.onrender.com/user/login'),
-          body: json.encode(data)
+         Uri.parse(url),body: body,headers: {
+        "Content-Type": "application/json"
+      },
       );
-      if(response.statusCode == 200 || response.statusCode == "SUCCESS"){
-        print(response.statusCode);
-        print(response.body.toString());
-        print('Login successfully');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RootApp(),
-          ),
-        );
-
+      if(response.statusCode == 200){
+        var userLoginResponse = UserLoginResponse.fromJson(json.decode(response.body));
+        if(userLoginResponse.status == "SUCCESS")
+          {
+            var userDetails = userLoginResponse.data!;
+            _data = userDetails.first;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("${_data.fullName} : ${userLoginResponse.message}"),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 2),
+                dismissDirection: DismissDirection.down,
+                elevation: 10,
+              ),
+            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RootApp(),
+              ),
+            );
+          }
+        else
+          {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("${userLoginResponse.message}"),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 2),
+                dismissDirection: DismissDirection.down,
+                elevation: 10,
+              ),
+            );
+          }
       }
       else if(response.statusCode != 200){
         print(response.statusCode);
-        print('Login failed');
+        print('Something went wrong!');
       }
      else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -137,13 +168,11 @@ class LoginPageState extends State<LoginPage>
     }}
   }
 
-
   @override
   void initState() {
     //FingerPrint
     _checkBiometric();
     _getAvailableBiometric();
-
     //Animations'
     _controller = AnimationController(
         duration: const Duration(milliseconds: 4000), vsync: this, value: 0.2);
