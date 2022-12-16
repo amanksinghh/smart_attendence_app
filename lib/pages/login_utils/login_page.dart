@@ -1,8 +1,10 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_attendence_app/pages/homepage/homepage.dart';
@@ -96,38 +98,33 @@ class LoginPageState extends State<LoginPage>
     });
   }
 
+
   ///Login Functionality
   Future<void> login() async {
+
+    var data = {'email': emailController.text, 'password' : passwordController.text};
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      var response = await http.post(
-          Uri.parse(
-              "https://loginlogoutserverreactnative.herokuapp.com/user/login"),
-          // headers: {
-          //   'Content-Type': 'application/json',
-          // },
-          body: json.encode({
-            'email': emailController.text,
-            'password': passwordController.text,
-          }));
-      print(response);
-      print(response.statusCode);
-
-      if (response == null || response.statusCode != 200) {
-        setState(() {
-          loading = true;
-        });
-      }
-      if (response.statusCode != 200) {
-        print(response.body);
-
+      Response response = await http.post(
+          Uri.parse('https://attandance-server.onrender.com/user/login'),
+          body: json.encode(data)
+      );
+      if(response.statusCode == 200 || response.statusCode == "SUCCESS"){
+        print(response.statusCode);
+        print(response.body.toString());
+        print('Login successfully');
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => RootApp(),
           ),
         );
+
       }
-    } else {
+      else if(response.statusCode != 200){
+        print(response.statusCode);
+        print('Login failed');
+      }
+     else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Please enter your email and password"),
@@ -137,8 +134,9 @@ class LoginPageState extends State<LoginPage>
           elevation: 10,
         ),
       );
-    }
+    }}
   }
+
 
   @override
   void initState() {
