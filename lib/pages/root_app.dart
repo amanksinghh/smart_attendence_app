@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 import 'budget_page.dart';
 import 'create_budge_page.dart';
-import 'daily_page.dart';
-import 'profile_page.dart';
-import 'stats_page.dart';
+import 'package:smart_attendence_app/pages/daily_page.dart';
+import 'package:smart_attendence_app/pages/timeline/profile_page_v0.dart';
+import 'package:smart_attendence_app/pages/stats_page.dart';
 import '../theme/colors.dart';
 
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';

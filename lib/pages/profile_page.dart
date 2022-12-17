@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:smart_attendence_app/pages/login_utils/api_service.dart';
 
 import '../theme/colors.dart';
 
@@ -15,6 +16,21 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController _email =
       TextEditingController(text: "ritesh.k@aimtron.com");
   TextEditingController dateOfBirth = TextEditingController(text: "05-02-2002");
+
+
+
+
+
+
+  // String getInitials() {
+  //   List<String> names = [];
+  //   String fullName =
+  //   StoreProvider.of<ApiService>(context).state.body.trim();
+  //   names.add(fullName.split(" ").first);
+  //   names.add(fullName.split(" ").last);
+  //   return names.first.substring(0, 1).toUpperCase() +
+  //       names.last.substring(0, 1).toUpperCase();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +70,18 @@ class _ProfilePageState extends State<ProfilePage> {
                             fontWeight: FontWeight.bold,
                             color: black),
                       ),
-                      Icon(Icons.settings)
+
+                      //
+                      //
+                      //
+                      //
+                      //
+                      IconButton(onPressed: (){
+                        setState(() {
+
+                        });
+                      }, icon: Icon(Icons.settings))
+                      // Icon(Icons.settings)
                     ],
                   ),
                   SizedBox(
@@ -72,22 +99,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: CircularPercentIndicator(
                                     circularStrokeCap: CircularStrokeCap.round,
                                     backgroundColor: grey.withOpacity(0.3),
-                                    radius: 60.0,
+                                    radius: 50.0,
                                     lineWidth: 6.0,
                                     percent: 0.7,
+                                    animationDuration: 5,
                                     progressColor: primary),
                               ),
                               Positioned(
-                                top: 18,
+                                top: 16,
                                 left: 16,
-                                child: Container(
-                                  width: 85,
-                                  height: 85,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: NetworkImage("$profile_image"),
-                                          fit: BoxFit.cover)),
+                                child: Padding(
+                                  padding: EdgeInsets.all(16),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    child: Text("RK",
+                                        style: TextStyle(
+                                            color: Colors.grey,fontSize: 24, fontWeight: FontWeight.w700)),
+                                  ),
                                 ),
                               )
                             ],
@@ -169,12 +197,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(color: white)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(13.0),
-                              child: Text(
-                                "About Me",
-                                style: TextStyle(color: white),
-                              ),
+                            child: TextButton(
+                              child: Text("About Me",
+                              style: TextStyle(color: white)),
+                              onPressed:(){
+                                print("about me button pressed");
+                              },
                             ),
                           )
                         ],
@@ -237,4 +265,55 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+}
+Widget drawerTab(
+    {required String text,
+      required GestureTapCallback onTap,
+      required Icon icons,
+      required Color color,
+      required BuildContext context}) {
+  return Center(
+    child: ListTile(
+      //selectedColor: logoColor,
+      //selectedTileColor: logoColor,
+      // selected: true,
+      // selectedColor: logoColor,
+      trailing: Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: icons,
+      ),
+      iconColor: color,
+      contentPadding: EdgeInsets.zero,
+      visualDensity: const VisualDensity(vertical: 3),
+      title: Row(
+        //  mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: Text(
+              text,
+              style:
+              TextStyle(color: color, fontSize: 16, fontFamily: "primary-font-family"),
+            ),
+          )
+        ],
+      ),
+      onTap: onTap,
+    ),
+  );
+}
+
+// To take names and routes of nav Tabs dynamically
+
+class SettingsTab {
+  String name;
+  Icon icons;
+  String route;
+  Map? arguments;
+
+  SettingsTab(
+      {required this.name,
+        required this.route,
+        this.arguments,
+        required this.icons});
 }

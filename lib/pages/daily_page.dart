@@ -11,10 +11,10 @@ class DailyPage extends StatefulWidget {
 }
 
 class _DailyPageState extends State<DailyPage> {
-  int activeDay = 3;
+  int? activeDay;
   TextEditingController searchController = TextEditingController();
   bool searchbarVisible = false;
-
+  
 
   @override
   void didChangeDependencies() async {
@@ -162,66 +162,78 @@ class _DailyPageState extends State<DailyPage> {
                   SizedBox(
                     height: 25,
                   ),
-                  Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(days.length, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              activeDay = index;
-                            });
-                          },
-                          child: Container(
-                            width: (MediaQuery.of(context).size.width - 40) / 7,
-                            child: Column(
-                              children: [
-                                Text(
-                                  days[index]['label'],
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                SingleChildScrollView(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                        color: activeDay == index
-                                            ? primary
-                                            : Colors.transparent,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: activeDay == index
-                                                ? primary
-                                                : black.withOpacity(0.1))),
-                                    child: Center(
-                                      child: Text(
-                                        days[index]['day'],
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w600,
-                                            color: activeDay == index
-                                                ? white
-                                                : black),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(days.length, (index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                activeDay = index;
+                              });
+                            },
+                            child: Container(
+                              width: (MediaQuery.of(context).size.width - 40) / 7,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    days[index]['label'],
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  SingleChildScrollView(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    child: Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                          color: activeDay == index
+                                              ? primary
+                                              : Colors.transparent,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: activeDay == index
+                                                  ? primary
+                                                  : black.withOpacity(0.1))),
+                                      child: Center(
+                                        child: Text(
+                                          days[index]['day'],
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600,
+                                              color: activeDay == index
+                                                  ? white
+                                                  : black),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      }))
+                          );
+                        })),
+                  )
                 ],
               ),
             ),
           ),
-          SizedBox(
-            height: 30,
-          ),
+          Container(
+            margin: EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Text("Working Day",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),),
+              Spacer(),
+              Spacer(),
+              Text("Check In",style:  TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),),
+              Spacer(),
+              Text("Check out",style:  TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18),),
+            ],
+          ),),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Column(
@@ -233,7 +245,7 @@ class _DailyPageState extends State<DailyPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Flexible(
-                        flex:3,
+                        flex:2,
                         child: Container(
                           margin: EdgeInsets.symmetric(horizontal: 1),
                           child: Row(
@@ -254,7 +266,7 @@ class _DailyPageState extends State<DailyPage> {
                                 // ),
                               // ),
                               Flexible(
-                                flex:2,
+                                flex:1,
                                 child: Container(
                                   width: (size.width - 90) * 0.5,
                                   child: Column(
@@ -286,10 +298,11 @@ class _DailyPageState extends State<DailyPage> {
                           ),
                         ),
                       ),
+                      Spacer(),
 
 
                       Container(
-                        width: (size.width - 40) * 0.3,
+                       // width: (size.width - 40) * 0.3,
                         child: Align(
                           child: Text(
                             daily[index]['checkedInTime'],
@@ -300,9 +313,10 @@ class _DailyPageState extends State<DailyPage> {
                           ),
                         ),
                       ),
+                      Spacer(),
 
                       Container(
-                        width: (size.width - 40) * 0.3,
+                        //width: (size.width - 40) * 0.3,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [

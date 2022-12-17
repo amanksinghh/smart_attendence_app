@@ -60,6 +60,8 @@ dependencies:
   animated_splash_screen: ^1.2.0
   fl_chart: ^0.55.2
   percent_indicator: ^4.2.2
+  animated_theme_switcher: ^2.0.1-nullsafety.0
+  image_picker: any
 
 dev_dependencies:
   flutter_test:
