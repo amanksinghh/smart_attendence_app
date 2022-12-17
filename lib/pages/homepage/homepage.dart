@@ -1,12 +1,7 @@
 import 'dart:convert';
-
 import "package:flutter/material.dart";
+import 'package:http/http.dart';
 import 'package:smart_attendence_app/api_models/user_response.dart';
-
-import '../../network_api_calls/api_constants.dart';
-import '../../network_api_calls/api_service.dart';
-import 'dart:developer';
-
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
@@ -17,64 +12,66 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late List<UsersResponseModel> _userModel =[];
-        List<Users>? users;
+  Users? users;
 
-  Future<List<UsersResponseModel>> _getData() async {
-    try {
-      var url = Uri.parse(ApiConstants.baseUrl);
-      final response = await http.get(url);
-      print(response.body);
-      if (response.statusCode == 200) {
-        List responseJson = jsonDecode(response.body.toString());
-       //List<UsersResponseModel> _model = responseJson;
-       // return _model;
+  Future<void> getUsers() async {
+      var url = 'https://attandance-server.onrender.com/user';
+      Response response = await http.get(Uri.parse(url));
+      if(response.statusCode == 200){
+        var userListResponse = UsersResponseModel.fromJson(json.decode(response.body));
+        var userDetails = userListResponse.users;
+        users = userDetails!.first;
+        print(users?.fullName);
+        print("API called");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("${users?.fullName} : ${users?.email}"),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 2),
+            dismissDirection: DismissDirection.down,
+            elevation: 10,
+          ),
+        );
       }
-    } catch (e) {
-      log(e.toString());
-    }
-    throw "Not called";
+      else
+        {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Something went wrong !"),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 2),
+              dismissDirection: DismissDirection.down,
+              elevation: 10,
+            ),
+          );
+        }
   }
+  @override
+  void initState() {
+    getUsers();
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    _getData();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Users List"),
+        title: const Text("Users List"),
       ),
 
-      body: _userModel == null || _userModel!.isEmpty
-          ? const Center(
-        child: CircularProgressIndicator(),
-      ) : ListView.builder(
-        itemCount: _userModel!.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(_userModel![index].users.toString()),
-                   // Text(_userModel![index].username),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // Text(_userModel![index].email),
-                    // Text(_userModel![index].website),
-                  ],
-                ),
-              ],
+      body:  SingleChildScrollView(
+        child:
+        Column(
+          children: [
+            Text(users?.fullName ?? ""),
+            const SizedBox(
+              height: 20.0,
             ),
-          );
-        },
-      ),
+          ]
+        )
+      )
     );
   }
 }

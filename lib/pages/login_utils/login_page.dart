@@ -4,14 +4,17 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_attendence_app/api_models/user_response.dart';
 import 'package:smart_attendence_app/pages/homepage/homepage.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:smart_attendence_app/utils/shared_pref.dart';
 
 import '../../api_models/user_login.dart';
+import '../../network_api_calls/api_constants.dart';
 import '../root_app.dart';
 
 class LoginPage extends StatefulWidget {
@@ -122,14 +125,14 @@ class LoginPageState extends State<LoginPage>
           {
             var userDetails = userLoginResponse.data!;
             _data = userDetails.first;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("${_data.fullName} : ${userLoginResponse.message}"),
-                backgroundColor: Colors.red,
-                duration: Duration(seconds: 2),
-                dismissDirection: DismissDirection.down,
-                elevation: 10,
-              ),
+            Fluttertoast.showToast(
+                msg: "${_data.fullName} : ${userLoginResponse.message}",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0
             );
             Navigator.push(
               context,
@@ -140,14 +143,14 @@ class LoginPageState extends State<LoginPage>
           }
         else
           {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("${userLoginResponse.message}"),
+            Fluttertoast.showToast(
+                msg: "${userLoginResponse.message}",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
                 backgroundColor: Colors.red,
-                duration: Duration(seconds: 2),
-                dismissDirection: DismissDirection.down,
-                elevation: 10,
-              ),
+                textColor: Colors.white,
+                fontSize: 16.0
             );
           }
       }

@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:smart_attendence_app/onboarding/onboarding_screen.dart';
-import 'package:smart_attendence_app/pages/login_utils/login.dart';
 import 'package:smart_attendence_app/pages/login_utils/login_page.dart';
 import 'package:smart_attendence_app/pages/root_app.dart';
 import 'package:smart_attendence_app/services/locator.dart';

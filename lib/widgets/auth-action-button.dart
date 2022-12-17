@@ -1,9 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:image/image.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/pages/root_app.dart';
+import '../api_models/user_by_id_response.dart';
+import '../api_models/user_put_location_response.dart';
 import '../db/databse_helper.dart';
 import '../db/user.model.dart';
 import '../pages/homepage/homepage.dart';
@@ -11,8 +17,10 @@ import '../pages/profile.dart';
 import '../services/camera.service.dart';
 import '../services/locator.dart';
 import '../services/ml_service.dart';
+import '../utils/shared_pref.dart';
 import 'app_button.dart';
 import 'app_text_field.dart';
+import 'package:http/http.dart' as http;
 
 class AuthActionButton extends StatefulWidget {
   AuthActionButton(
@@ -48,6 +56,122 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   String long = "", lat = "";
   late StreamSubscription<Position> positionStream;
 
+ // Users? users;
+  Users? userById;
+  Data? putResponseData;
+
+  Future<void> getUsers() async {
+    var url = 'https://attandance-server.onrender.com/user/639c00a212b97a003403fd31';
+    Response response = await http.get(Uri.parse(url));
+    if(response.statusCode == 200){
+      var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
+      var userDetails = userListResponse.users;
+      userById = userDetails;
+      print("User by ID API called");
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text("${userById?.fullName} : ${userById?.email}"),
+      //     backgroundColor: Colors.red,
+      //     duration: const Duration(seconds: 2),
+      //     dismissDirection: DismissDirection.down,
+      //     elevation: 10,
+      //   ),
+      // );
+    }
+    else
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong !"),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+          dismissDirection: DismissDirection.down,
+          elevation: 10,
+        ),
+      );
+    }
+  }
+
+  Future<void> putLatLong() async {
+
+    if (position?.latitude != null && userById?.orgLatitude == position?.latitude  && userById?.orgLongitude == position?.longitude) {
+      Map data = {
+        "currLat": position?.latitude.toString(),
+        "currLong": position?.longitude.toString(),
+        "entry": amount.text,
+        "exit": amount.text
+      };
+      //encode Map to JSON
+      String body = json.encode(data);
+      var url = 'https://attandance-server.onrender.com/user/639c00a212b97a003403fd31';
+      Response response = await http.put(
+        Uri.parse(url),body: body,headers: {
+        "Content-Type": "application/json"
+      },
+      );
+      if(response.statusCode == 200){
+        var userPutResponse = UserPutLocationResponse.fromJson(json.decode(response.body));
+        if(userPutResponse.status == true)
+        {
+          var userDetails = userPutResponse.data!;
+          putResponseData = userDetails;
+          print(putResponseData?.designation);
+
+          Fluttertoast.showToast(
+              msg: "Punched In Successfully.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RootApp(),
+            ),
+          );
+        }
+        else
+        {
+          Fluttertoast.showToast(
+              msg: "${userPutResponse.status} : Please try again",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        }
+      }
+      else if(response.statusCode != 200){
+        Fluttertoast.showToast(
+            msg: "${response.statusCode} : Please try again",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+      }
+
+    }
+    else {
+      print("You are Outside of Organisation ! Cannot Punch In. ");
+      Fluttertoast.showToast(
+          msg: "You are Outside of Organisation ! Cannot Punch In. ",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    }
+  }
 
   Future _signUp(context) async {
     DatabaseHelper _databaseHelper = DatabaseHelper.instance;
@@ -108,6 +232,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
             date = DateTime.now();
             amount.text = '$date';
             getLocation();
+            getUsers();
           },
         );
         PersistentBottomSheetController bottomSheetController =
@@ -167,7 +292,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           widget.isLogin && predictedUser != null
               ? Container(
                   child: Text(
-                    'Welcome back, ' + predictedUser!.user + '.',
+                    'Welcome back, ${predictedUser!.user}.',
                     style: TextStyle(fontSize: 20),
                   ),
                 )
@@ -210,8 +335,9 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                     : !widget.isLogin
                         ? AppButton(
                             text: 'Punch In',
-                            onPressed: () async {
-                              await _signUp(context);
+                            onPressed: () {
+                              //await _signUp(context);
+                              putLatLong();
                             },
                             icon: Icon(
                               Icons.person_add,

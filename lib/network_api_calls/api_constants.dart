@@ -1,4 +1,5 @@
 class ApiConstants {
-  static String baseUrl = 'https://attandance-server.onrender.com/users';
-  static String usersEndpoint = '/users';
+  static String usersList = 'https://attandance-server.onrender.com/users';
+  static String userLogin = 'https://attandance-server.onrender.com/users/login';
+
 }
