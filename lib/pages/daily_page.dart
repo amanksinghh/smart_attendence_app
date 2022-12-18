@@ -1,5 +1,8 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:month_year_picker/month_year_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../json/daily_json.dart';
 import '../json/day_month.dart';
@@ -11,332 +14,218 @@ class DailyPage extends StatefulWidget {
 }
 
 class _DailyPageState extends State<DailyPage> {
-  int activeDay = 3;
-  TextEditingController searchController = TextEditingController();
-  bool searchbarVisible = false;
+  double screenHeight = 0;
+  double screenWidth = 0;
 
+  Color primary = const Color(0xffeef444c);
 
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    searchController.text.split(" ").first.trim();
-        searchController.text.split(" ").last.trim();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    // searchbarFocus.dispose();
-    searchController.dispose();
-    // print('dispose');
-  }
+  String _month = DateFormat('MMMM').format(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: grey.withOpacity(0.05),
-      body: getBody(),
-    );
-  }
-
-  Widget getBody() {
-    var size = MediaQuery.of(context).size;
-   
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(color: white, boxShadow: [
-              BoxShadow(
-                color: grey.withOpacity(0.01),
-                spreadRadius: 10,
-                blurRadius: 3,
-                // changes position of shadow
-              ),
-            ]),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  top: 50, right: 20, left: 20, bottom: 25),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Daily Transaction",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: black),
-                      ),
-                      Expanded(
-                        child: Visibility(
-                            visible: searchbarVisible,
-                            child: Stack(children: [
-                              Container(
-                                height: 29,
-                                margin: const EdgeInsets.only(
-                                    top: 10, bottom: 10,left: 10),
-                                child: Material(
-                                  borderRadius: BorderRadius.circular(5),
-                                  elevation: 0,
-                                  child: TextFormField(
-                                    autofocus: true,
-                                    // focusNode: searchbarFocus,
-                                    controller: searchController,
-                                    onChanged: (value) {
-                                      setState(() {
-
-                                            searchController.text
-                                                .split(" ")
-                                                .first
-                                                .trim();
-                                            searchController.text
-                                                .split(" ")
-                                                .last
-                                                .trim();
-                                      });
-                                    },
-                                    decoration: const InputDecoration(
-                                        contentPadding: EdgeInsets.all(8),
-                                        isDense: true,
-                                        hintText: "Search",
-                                        hintStyle: TextStyle(
-                                          fontSize: 15,
-                                        ),
-                                        border: InputBorder.none),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                  right: 0,
-                                  top: 4,
-                                  child: Container(
-                                      height: 12,
-                                      width: 12,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(6),
-                                          color: grey),
-                                      child: IconButton(
-                                        padding: EdgeInsets.zero,
-                                        onPressed: () {
-                                          setState(() {
-                                            searchbarVisible = false;
-                                            searchController.text="";
-                                            searchController.text.split(" ").first.trim();
-                                                searchController.text.split(" ").last.trim();
-                                          });
-                                        },
-                                        alignment: Alignment.center,
-                                        icon: const Icon(
-                                          Icons.close,
-                                          size: 10,
-                                        ),
-                                        color: white,
-
-                                      )))
-                            ])),
-                      ),
-                      Visibility(
-                        visible: !searchbarVisible,
-                        child: IconButton(
-                            onPressed: () {
-                              if (searchbarVisible == false) {
-                                setState(() {
-                                  searchbarVisible = true;
-                                });
-                              } else {
-                                setState(() {
-                                  searchbarVisible = false;
-                                });
-                              }
-                            },
-                            icon: Icon(
-                              Icons.search,
-                              color: Theme.of(context).primaryColor,
-                            )),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(days.length, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              activeDay = index;
-                            });
-                          },
-                          child: Container(
-                            width: (MediaQuery.of(context).size.width - 40) / 7,
-                            child: Column(
-                              children: [
-                                Text(
-                                  days[index]['label'],
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                      color: activeDay == index
-                                          ? primary
-                                          : Colors.transparent,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: activeDay == index
-                                              ? primary
-                                              : black.withOpacity(0.1))),
-                                  child: Center(
-                                    child: Text(
-                                      days[index]['day'],
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600,
-                                          color: activeDay == index
-                                              ? white
-                                              : black),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      }))
-                ],
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(top: 32),
+              child: Text(
+                "My Attendance",
+                style: TextStyle(
+                  fontFamily: "NexaBold",
+                  fontSize: screenWidth / 18,
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Column(
-                children: List.generate(daily.length, (index) {
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        width: (size.width - 40) * 0.7,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: grey.withOpacity(0.1),
-                              ),
-                              child: Center(
-                                child: Image.asset(
-                                  daily[index]['icon'],
-                                  width: 30,
-                                  height: 30,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 15),
-                            Container(
-                              width: (size.width - 90) * 0.5,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    daily[index]['name'],
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: black,
-                                        fontWeight: FontWeight.w500),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    daily[index]['date'],
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: black.withOpacity(0.5),
-                                        fontWeight: FontWeight.w400),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: (size.width - 40) * 0.3,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              daily[index]['price'],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
-                                  color: Colors.green),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 65, top: 8),
-                    child: Divider(
-                      thickness: 0.8,
-                    ),
-                  )
-                ],
-              );
-            })),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Row(
+            Stack(
               children: [
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(right: 80),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(top: 32),
                   child: Text(
-                    "Total",
+                    _month,
                     style: TextStyle(
-                        fontSize: 16,
-                        color: black.withOpacity(0.4),
-                        fontWeight: FontWeight.w600),
-                    overflow: TextOverflow.ellipsis,
+                      fontFamily: "NexaBold",
+                      fontSize: screenWidth / 18,
+                    ),
                   ),
                 ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                    "\$1780.00",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: black,
-                        fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
+                Container(
+                  alignment: Alignment.centerRight,
+                  margin: const EdgeInsets.only(top: 32),
+                  child: GestureDetector(
+                    onTap: () async {
+                      final month = await showMonthYearPicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2022),
+                          lastDate: DateTime(2099),
+                          builder: (context, child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: ColorScheme.light(
+                                  primary: primary,
+                                  secondary: primary,
+                                  onSecondary: Colors.white,
+                                ),
+                                textButtonTheme: TextButtonThemeData(
+                                  style: TextButton.styleFrom(
+                                    foregroundColor : primary,
+                                  ),
+                                ),
+                                textTheme: const TextTheme(
+                                  headline4: TextStyle(
+                                    fontFamily: "NexaBold",
+                                  ),
+                                  overline: TextStyle(
+                                    fontFamily: "NexaBold",
+                                  ),
+                                  button: TextStyle(
+                                    fontFamily: "NexaBold",
+                                  ),
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          }
+                      );
+
+                      if(month != null) {
+                        setState(() {
+                          _month = DateFormat('MMMM').format(month);
+                        });
+                      }
+                    },
+                    child: Icon(Icons.calendar_month),
+                    // Text(
+                    //   "Pick a Month",
+                    //   style: TextStyle(
+                    //     fontFamily: "NexaBold",
+                    //     fontSize: screenWidth / 18,
+                    //   ),
+                    // ),
                   ),
                 ),
               ],
             ),
-          )
-        ],
+
+            //TODO: CARD CODE HERE........ FETCH API
+
+
+            SizedBox(
+              height: screenHeight / 1.45,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection("Employee")
+                    .doc(User.id)
+                    .collection("Record")
+                    .snapshots(),
+                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if(snapshot.hasData) {
+                    final snap = snapshot.data!.docs;
+                    return ListView.builder(
+                      itemCount: snap.length,
+                      itemBuilder: (context, index) {
+                        return DateFormat('MMMM').format(snap[index]['date'].toDate()) == _month ? Container(
+                          margin: EdgeInsets.only(top: index > 0 ? 12 : 0, left: 6, right: 6),
+                          height: 150,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(2, 2),
+                              ),
+                            ],
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.only(),
+                                  decoration: BoxDecoration(
+                                    color: primary,
+                                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      DateFormat('EE\ndd').format(snap[index]['date'].toDate()),
+                                      style: TextStyle(
+                                        fontFamily: "NexaBold",
+                                        fontSize: screenWidth / 18,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Check In",
+                                      style: TextStyle(
+                                        fontFamily: "NexaRegular",
+                                        fontSize: screenWidth / 20,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    Text(
+                                      snap[index]['checkIn'],
+                                      style: TextStyle(
+                                        fontFamily: "NexaBold",
+                                        fontSize: screenWidth / 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Check Out",
+                                      style: TextStyle(
+                                        fontFamily: "NexaRegular",
+                                        fontSize: screenWidth / 20,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    Text(
+                                      snap[index]['checkOut'],
+                                      style: TextStyle(
+                                        fontFamily: "NexaBold",
+                                        fontSize: screenWidth / 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ) : const SizedBox();
+                      },
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+
+            ),
+          ],
+        ),
       ),
     );
   }
