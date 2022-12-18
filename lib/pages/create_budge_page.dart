@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:smart_attendence_app/face_auth_puch/punch_out.dart';
 
+import '../api_models/user_by_id_response.dart';
 import '../face_auth_puch/punch_in.dart';
 import '../json/create_budget_json.dart';
 import '../theme/colors.dart';
@@ -18,8 +24,52 @@ class CreatBudgetPage extends StatefulWidget {
 class _CreatBudgetPageState extends State<CreatBudgetPage> {
   int activeCategory = 0;
 
+  Users? userById;
+
+  Future<void> getUsers() async {
+    var url = 'https://attandance-server.onrender.com/user/639c00a212b97a003403fd31';
+    Response response = await http.get(Uri.parse(url));
+    if(response.statusCode == 200){
+
+      setState(() {
+        var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
+        var userDetails = userListResponse.users;
+        userById = userDetails;
+        print("User by ID API called");
+        print(userById?.entry);
+      });
+
+    }
+    else
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong !"),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+          dismissDirection: DismissDirection.down,
+          elevation: 10,
+        ),
+      );
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      getUsers();
+    });
+  }
+
+  void functionThatSetsTheState(){
+    setState(() {
+      getUsers();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: grey.withOpacity(0.05),
       body: getBody(),
@@ -105,7 +155,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                                   decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
-                                          image: NetworkImage("$profile_image"),
+                                          image: NetworkImage("assets/images/logo.png"),
                                           fit: BoxFit.cover)),
                                 ),
                               )
@@ -119,7 +169,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Ritesh Kumar",
+                              userById?.fullName ?? "",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -129,7 +179,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                               height: 10,
                             ),
                             Text(
-                              "Mobile App Developer",
+                              userById?.org ?? "",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -139,7 +189,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                               height: 15,
                             ),
                             Text(
-                              "E23T56",
+                              userById?.designation ?? "",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -185,11 +235,11 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                                     width: 5,
                                   ),
                                   Text(
-                                    "2:55 PM",
+                                    userById?.entry ?? "",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w700,
-                                        fontSize: 20,
-                                        color: blue),
+                                        fontSize: 16,
+                                        color: Colors.green),
                                   ),
                                 ],
                               ),
@@ -197,7 +247,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                                 height: 5,
                               ),
                               Text(
-                                "Checked In",
+                                "Punched In",
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
@@ -219,7 +269,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                                     width: 2,
                                   ),
                                   Text(
-                                    "2:55",
+                                    "timer count",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 20,
@@ -242,16 +292,30 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.arrow_upward_rounded,
-                                color: primary,
-                                size: 25,
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.arrow_upward_rounded,
+                                    color: black,
+                                    size: 25,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    userById?.exit ?? "",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                        color: Colors.red),
+                                  ),
+                                ],
                               ),
                               SizedBox(
-                                height: 8,
+                                height: 5,
                               ),
                               Text(
-                                "CHECKED OUT",
+                                "Punched Out",
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
@@ -280,13 +344,26 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                 onTap: () {
                   setState(() {
                     activeCategory = index;
+                    switch (index)
+                    {
+                      case 0:
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchIn())).whenComplete(() => {functionThatSetsTheState()});
+                        break;
+                      case 1:
+                        break;
+
+                      case 2:
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchOut())).whenComplete(() => {functionThatSetsTheState()});
+                        break;
+                    }
                   });
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(
                     left: 5,
                   ),
-                  child: Container(
+                  child:
+                  Container(
                     margin: EdgeInsets.only(
                       left: 5,
                     ),
@@ -317,7 +394,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                         children: [
                           GestureDetector(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchIn()));
+                             // Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchIn())).whenComplete(() => {functionThatSetsTheState()});
                             },
                             child: Container(
                                 width: 60,

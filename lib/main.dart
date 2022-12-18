@@ -12,11 +12,11 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
-// final routes = {
-//   '/': (context) => OnboardingScreen(),
-//   '/root': (context) => RootApp(),
-//   "/login": (context) => LoginPage(),
-// };
+final routes = {
+  '/': (context) => RootApp(),
+  '/root': (context) => RootApp(),
+  "/login": (context) => LoginPage(),
+};
 
 void main() {
   setupServices();

@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
 import 'package:image/image.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/pages/root_app.dart';
 import '../api_models/user_by_id_response.dart';
@@ -55,6 +56,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   Position? position;
   String long = "", lat = "";
   late StreamSubscription<Position> positionStream;
+  String? formattedDate;
 
  // Users? users;
   Users? userById;
@@ -93,13 +95,13 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   }
 
   Future<void> putLatLong() async {
+    //&& userById?.orgLatitude == position?.latitude  && userById?.orgLongitude == position?.longitude
 
-    if (position?.latitude != null && userById?.orgLatitude == position?.latitude  && userById?.orgLongitude == position?.longitude) {
+    if (position?.latitude != null) {
       Map data = {
         "currLat": position?.latitude.toString(),
         "currLong": position?.longitude.toString(),
-        "entry": amount.text,
-        "exit": amount.text
+        "entry": formattedDate
       };
       //encode Map to JSON
       String body = json.encode(data);
@@ -126,12 +128,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
               textColor: Colors.white,
               fontSize: 16.0
           );
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RootApp(),
-            ),
-          );
+          Navigator.pushNamed(context,'/root');
         }
         else
         {
@@ -230,6 +227,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         setState(
               () {
             date = DateTime.now();
+            formattedDate = DateFormat.Hm().format(date!);
             amount.text = '$date';
             getLocation();
             getUsers();
@@ -314,9 +312,8 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                 SizedBox(height: 10),
                 widget.isLogin && predictedUser == null
                     ? Container()
-                    : AppTextField(
-                        controller: amount,
-                        labelText: "Date and Time",
+                    : Text(
+                          "Entry Time: ${formattedDate}",
                       ),
                 SizedBox(height: 10),
                 Divider(),
@@ -386,8 +383,8 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   }
 
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 }
