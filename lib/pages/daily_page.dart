@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_attendence_app/db/user.model.dart';
 
 import '../json/daily_json.dart';
 import '../json/day_month.dart';
@@ -121,7 +122,7 @@ class _DailyPageState extends State<DailyPage> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection("Employee")
-                    .doc(User.id)
+                    .doc()
                     .collection("Record")
                     .snapshots(),
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -130,7 +131,8 @@ class _DailyPageState extends State<DailyPage> {
                     return ListView.builder(
                       itemCount: snap.length,
                       itemBuilder: (context, index) {
-                        return DateFormat('MMMM').format(snap[index]['date'].toDate()) == _month ? Container(
+                        return DateFormat('MMMM').format(snap[index]['date'].toDate()) == _month ?
+                        Container(
                           margin: EdgeInsets.only(top: index > 0 ? 12 : 0, left: 6, right: 6),
                           height: 150,
                           decoration: const BoxDecoration(
@@ -224,7 +226,7 @@ class _DailyPageState extends State<DailyPage> {
                 },
 
             ),
-          ],
+            )],
         ),
       ),
     );

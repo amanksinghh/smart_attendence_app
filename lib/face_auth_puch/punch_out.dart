@@ -35,12 +35,13 @@ class PunchOutState extends State<PunchOut> {
   Users? userById;
   Data? putResponseData;
   String? formattedDate;
+  String? formattedTime;
   DateTime? date;
 
   Future<void> putLatLong() async {
 
     Map data = {
-      "exit": formattedDate
+      "exit": formattedTime
     };
     //encode Map to JSON
     String body = json.encode(data);
@@ -101,7 +102,8 @@ class PunchOutState extends State<PunchOut> {
     super.initState();
     setState(() {
       date = DateTime.now();
-      formattedDate = DateFormat.Hm().format(date!);
+      formattedTime = DateFormat.Hm().format(date!);
+      formattedDate = DateFormat.MMMd().format(date!);
     });
   }
 

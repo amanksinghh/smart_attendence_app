@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:smart_attendence_app/pages/homepage/homepage.dart';
 
 import 'budget_page.dart';
 import 'create_budge_page.dart';
@@ -19,7 +20,8 @@ class RootApp extends StatefulWidget {
 class _RootAppState extends State<RootApp> {
   int pageIndex = 0;
   List<Widget> pages = [
-    DailyPage(),
+   // DailyPage(),
+    HomePage(),
     StatsPage(),
     BudgetPage(),
     ProfilePage(),
