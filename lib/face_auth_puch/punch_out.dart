@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -37,10 +38,16 @@ class PunchOutState extends State<PunchOut> {
   String? formattedDate;
   String? formattedTime;
   DateTime? date;
+  late LocationPermission permission;
+  Position? position;
+  String long = "", lat = "";
 
   Future<void> putLatLong() async {
 
     Map data = {
+      "currLat": position?.latitude.toString(),
+      "currLong": position?.longitude.toString(),
+      "entry": formattedTime,
       "exit": formattedTime
     };
     //encode Map to JSON
@@ -104,6 +111,7 @@ class PunchOutState extends State<PunchOut> {
       date = DateTime.now();
       formattedTime = DateFormat.Hm().format(date!);
       formattedDate = DateFormat.MMMd().format(date!);
+      getLocation();
     });
   }
 
@@ -125,5 +133,39 @@ class PunchOutState extends State<PunchOut> {
           ),
         )
     );
+  }
+
+  getLocation() async {
+    setState(() async {
+      position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      print(position?.longitude);
+      print(position?.latitude);
+
+      long = position?.longitude.toString() ?? "";
+      lat = position?.latitude.toString() ?? "";
+
+      setState(() {
+        //refresh UI
+      });
+
+      LocationSettings locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.high, //accuracy of the location data
+        distanceFilter: 100, //minimum distance (measured in meters) a
+        //device must move horizontally before an update event is generated;
+      );
+
+      StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
+          locationSettings: locationSettings).listen((Position position) {
+        print(position.longitude); //Output: 80.24599079
+        print(position.latitude); //Output: 29.6593457
+
+        long = position.longitude.toString();
+        lat = position.latitude.toString();
+
+        setState(() {
+          //refresh UI on update
+        });
+      });
+    });
   }
 }

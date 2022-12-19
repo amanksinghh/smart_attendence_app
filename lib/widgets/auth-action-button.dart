@@ -57,6 +57,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   String long = "", lat = "";
   late StreamSubscription<Position> positionStream;
   String? formattedDate;
+  late bool mounted;
 
  // Users? users;
   Users? userById;
@@ -70,15 +71,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
       var userDetails = userListResponse.users;
       userById = userDetails;
       print("User by ID API called");
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text("${userById?.fullName} : ${userById?.email}"),
-      //     backgroundColor: Colors.red,
-      //     duration: const Duration(seconds: 2),
-      //     dismissDirection: DismissDirection.down,
-      //     elevation: 10,
-      //   ),
-      // );
     }
     else
     {
@@ -101,7 +93,8 @@ class _AuthActionButtonState extends State<AuthActionButton> {
       Map data = {
         "currLat": position?.latitude.toString(),
         "currLong": position?.longitude.toString(),
-        "entry": formattedDate
+        "entry": formattedDate,
+        "exit": formattedDate
       };
       //encode Map to JSON
       String body = json.encode(data);
@@ -128,7 +121,8 @@ class _AuthActionButtonState extends State<AuthActionButton> {
               textColor: Colors.white,
               fontSize: 16.0
           );
-          Navigator.pushNamed(context,'/root');
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => RootApp(pageIndex: 4)));
         }
         else
         {
@@ -183,7 +177,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     await _databaseHelper.insert(userToSave);
     this._mlService.setPredictedData([]);
     Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => RootApp()));
+        MaterialPageRoute(builder: (BuildContext context) => RootApp(pageIndex: 0,)));
   }
 
   Future _signIn(context) async {

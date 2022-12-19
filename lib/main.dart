@@ -13,8 +13,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 final routes = {
-  '/': (context) => RootApp(),
-  '/root': (context) => RootApp(),
+  '/': (context) => RootApp(pageIndex: 0,),
+  '/root': (context) => RootApp(pageIndex: 0,),
   "/login": (context) => LoginPage(),
 };
 

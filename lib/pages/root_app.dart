@@ -13,12 +13,15 @@ import '../theme/colors.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 class RootApp extends StatefulWidget {
+  final int pageIndex;
+  RootApp({required this.pageIndex});
+
   @override
   _RootAppState createState() => _RootAppState();
 }
 
 class _RootAppState extends State<RootApp> {
-  int pageIndex = 0;
+  late int pageIndex ;
   List<Widget> pages = [
    // DailyPage(),
     HomePage(),
@@ -31,6 +34,7 @@ class _RootAppState extends State<RootApp> {
   @override
   void initState() {
     // TODO: implement initState
+    pageIndex = widget.pageIndex;
     super.initState();
   }
 
@@ -95,4 +99,5 @@ class _RootAppState extends State<RootApp> {
       pageIndex = index;
     });
   }
+
 }

@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
+import '../api_models/user_by_id_response.dart';
 import '../theme/colors.dart';
 
 var profile_image =
@@ -15,6 +20,44 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController _email =
       TextEditingController(text: "ritesh.k@aimtron.com");
   TextEditingController dateOfBirth = TextEditingController(text: "05-02-2002");
+
+  Users? userById;
+
+  Future<void> getUsers() async {
+    var url = 'https://attandance-server.onrender.com/user/639c00a212b97a003403fd31';
+    Response response = await http.get(Uri.parse(url));
+    if(response.statusCode == 200){
+
+      setState(() {
+        var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
+        var userDetails = userListResponse.users;
+        userById = userDetails;
+        print("User by ID API called");
+        print(userById?.entry);
+      });
+
+    }
+    else
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong !"),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+          dismissDirection: DismissDirection.down,
+          elevation: 10,
+        ),
+      );
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      getUsers();
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Ritesh Kumar",
+                              userById?.fullName??"Employee name",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -110,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               height: 10,
                             ),
                             Text(
-                              "Mobile App Developer",
+                              userById?.org??"Company Name",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -157,7 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 15,
                               ),
                               Text(
-                                "Mobile App Developer",
+                                userById?.designation??"Employee designation",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
@@ -204,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 10,
                 ),
                 Text(
-                  "ritesh.k@aimtron.com",
+                  userById?.email??"Employee email",
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
@@ -224,7 +267,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 10,
                 ),
                 Text(
-                  "05/02/2002",
+                  userById?.dateOfBirth??"Employee DOB",
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,

@@ -67,7 +67,7 @@ class LoginPageState extends State<LoginPage>
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => RootApp(),
+            builder: (context) => RootApp(pageIndex: 0,),
           ),
         );
       }
@@ -137,7 +137,7 @@ class LoginPageState extends State<LoginPage>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => RootApp(),
+                builder: (context) => RootApp(pageIndex: 0,),
               ),
             );
           }

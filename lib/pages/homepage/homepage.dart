@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    getUsers();
     return Scaffold(
       backgroundColor: grey.withOpacity(0.05),
       body: getBody(),
@@ -94,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Daily Transaction",
+                        "Attendence Summary",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

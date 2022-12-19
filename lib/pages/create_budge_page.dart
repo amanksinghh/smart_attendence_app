@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:smart_attendence_app/face_auth_puch/punch_out.dart';
+import 'package:smart_attendence_app/pages/count_up_timer.dart';
 
 import '../api_models/user_by_id_response.dart';
 import '../face_auth_puch/punch_in.dart';
@@ -23,6 +25,9 @@ class CreatBudgetPage extends StatefulWidget {
 
 class _CreatBudgetPageState extends State<CreatBudgetPage> {
   int activeCategory = 0;
+  late DateTime _lastButtonPress;
+  String? _pressDuration;
+  late Timer _ticker;
 
   Users? userById;
 
@@ -64,6 +69,16 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
   void functionThatSetsTheState(){
     setState(() {
       getUsers();
+      _ticker.cancel();
+    });
+  }
+
+  void functionThatStartsTimer(){
+    setState(() {
+      getUsers();
+      _lastButtonPress = DateTime.now();
+      _updateTimer();
+      _ticker = Timer.periodic(Duration(seconds:1),(_)=>_updateTimer());
     });
   }
 
@@ -152,11 +167,6 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                                 child: Container(
                                   width: 85,
                                   height: 85,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: NetworkImage("assets/images/logo.png"),
-                                          fit: BoxFit.cover)),
                                 ),
                               )
                             ],
@@ -269,7 +279,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                                     width: 2,
                                   ),
                                   Text(
-                                    "timer count",
+                                    _pressDuration ?? "00:00:00",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 20,
@@ -347,9 +357,10 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                     switch (index)
                     {
                       case 0:
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchIn())).whenComplete(() => {functionThatSetsTheState()});
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchIn())).whenComplete(() => {functionThatStartsTimer()});
                         break;
                       case 1:
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CountUpTimer()));
                         break;
 
                       case 2:
@@ -468,5 +479,23 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
         ],
       ),
     );
+  }
+  void _updateTimer() {
+    final duration = DateTime.now().difference(_lastButtonPress);
+    final newDuration = _formatDuration(duration);
+    setState(() {
+      _pressDuration = newDuration;
+    });
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 }
