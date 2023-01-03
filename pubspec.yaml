@@ -66,6 +66,7 @@ dependencies:
   month_year_picker: ^0.2.0+3
   cloud_firestore: ^4.2.0
   stop_watch_timer: ^2.0.0
+  dart_ipify: ^1.1.1
 
 dev_dependencies:
   flutter_test:

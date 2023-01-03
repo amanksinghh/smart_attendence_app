@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -70,6 +71,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
     setState(() {
       getUsers();
       _ticker.cancel();
+
     });
   }
 
@@ -84,7 +86,6 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: grey.withOpacity(0.05),
       body: getBody(),
@@ -350,21 +351,27 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
             // height: MediaQuery.of(context).size.height ,
             child: Row(
                 children: List.generate(categories.length, (index) {
-              return GestureDetector(
+                  return GestureDetector(
                 onTap: () {
                   setState(() {
                     activeCategory = index;
-                    switch (index)
-                    {
+                    switch (index) {
                       case 0:
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchIn())).whenComplete(() => {functionThatStartsTimer()});
+                        checkIpAddress();
                         break;
                       case 1:
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CountUpTimer()));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const CountUpTimer()));
                         break;
 
                       case 2:
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchOut())).whenComplete(() => {functionThatSetsTheState()});
+                        Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const PunchOut()))
+                            .whenComplete(() => {functionThatSetsTheState()});
                         break;
                     }
                   });
@@ -373,8 +380,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                   padding: const EdgeInsets.only(
                     left: 5,
                   ),
-                  child:
-                  Container(
+                  child: Container(
                     margin: EdgeInsets.only(
                       left: 5,
                     ),
@@ -404,8 +410,8 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onTap: (){
-                             // Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchIn())).whenComplete(() => {functionThatSetsTheState()});
+                            onTap: () {
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchIn())).whenComplete(() => {functionThatSetsTheState()});
                             },
                             child: Container(
                                 width: 60,
@@ -480,6 +486,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
       ),
     );
   }
+
   void _updateTimer() {
     final duration = DateTime.now().difference(_lastButtonPress);
     final newDuration = _formatDuration(duration);
@@ -497,5 +504,31 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  void checkIpAddress() async {
+    final ipv4 = await Ipify.ipv4();
+    print(" IPV4 : ${ipv4}"); // 98.207.254.136
+    final ipv6 = await Ipify.ipv64();
+    print("IPV6 : ${ipv6}"); // 98.207.254.136 or 2a00:1450:400f:80d::200e
+    final ipv4json = await Ipify.ipv64(format: Format.JSON);
+    print(ipv4json); //{"ip":"98.207.254.136"} or {"ip":"2a00:1450:400f:80d::200e"}
+    String checkIpv6 = "2409:4041:261e:e71a:7d43:d18:7e36:a6c0";
+    if (ipv6 == checkIpv6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Connected to Organization Wifi."),
+            backgroundColor: Colors.green,
+          ));
+      Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const PunchIn()))
+          .whenComplete(() => {functionThatStartsTimer()});
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Please Connect to Organization Wifi."),
+            backgroundColor: Colors.red,
+          ));
+    }
   }
 }

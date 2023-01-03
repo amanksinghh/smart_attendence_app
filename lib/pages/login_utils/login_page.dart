@@ -8,13 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:http/http.dart' as http;
-import 'package:smart_attendence_app/api_models/user_response.dart';
-import 'package:smart_attendence_app/pages/homepage/homepage.dart';
-import 'package:flutter_login/flutter_login.dart';
-import 'package:smart_attendence_app/utils/shared_pref.dart';
-
 import '../../api_models/user_login.dart';
-import '../../network_api_calls/api_constants.dart';
+import '../../dialogs/CustomProgressDialog.dart';
 import '../root_app.dart';
 
 class LoginPage extends StatefulWidget {
@@ -31,6 +26,7 @@ class LoginPageState extends State<LoginPage>
   late Animation<double> _animation;
 
   bool loading = false;
+  bool isDialogShowing = false;
 
   //Text Field Settings
 
@@ -113,6 +109,7 @@ class LoginPageState extends State<LoginPage>
     //encode Map to JSON
     String body = json.encode(data);
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      showLoader(context);
       var url = 'https://attandance-server.onrender.com/user/login';
       Response response = await http.post(
          Uri.parse(url),body: body,headers: {
@@ -120,6 +117,7 @@ class LoginPageState extends State<LoginPage>
       },
       );
       if(response.statusCode == 200){
+        hideLoader(context);
         var userLoginResponse = UserLoginResponse.fromJson(json.decode(response.body));
         if(userLoginResponse.status == "SUCCESS")
           {
@@ -345,4 +343,25 @@ class LoginPageState extends State<LoginPage>
       ),
     );
   }
+
+  showLoader(BuildContext context) {
+    if (!isDialogShowing) {
+      isDialogShowing = true;
+      showDialog(
+          context: context,
+          barrierColor: Colors.transparent,
+          builder: (BuildContext context) {
+            return const CustomProgressDialog();
+          }).then((value) {
+        isDialogShowing = false;
+      });
+    }
+  }
+
+  hideLoader(BuildContext context) {
+    if (isDialogShowing) {
+      Navigator.pop(context);
+    }
+  }
+
 }
