@@ -1,12 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api_models/user_by_id_response.dart';
 import '../theme/colors.dart';
+import '../utils/service_utilities.dart';
+import 'login_utils/login_page.dart';
 
 var profile_image =
     "https://media-exp1.licdn.com/dms/image/C5603AQEob5l8e06qQg/profile-displayphoto-shrink_800_800/0/1652278654609?e=1658361600&v=beta&t=IOrm1Y-2XbJ-wkn8Zy3ZGbcAssPC2gI4jfs4DyShYs4";
@@ -20,11 +24,19 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController _email =
       TextEditingController(text: "ritesh.k@aimtron.com");
   TextEditingController dateOfBirth = TextEditingController(text: "05-02-2002");
-
+  String? authToken;
   Users? userById;
 
+  getLoginData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    authToken = prefs.getString("authToken");
+    print(authToken);
+    getUsers();
+    return authToken;
+  }
+
   Future<void> getUsers() async {
-    var url = 'https://attandance-server.onrender.com/user/639c00a212b97a003403fd31';
+    var url = 'https://attandance-server.onrender.com/user/${authToken}';
     Response response = await http.get(Uri.parse(url));
     if(response.statusCode == 200){
 
@@ -54,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     setState(() {
-      getUsers();
+      getLoginData();
     });
   }
 
@@ -97,7 +109,26 @@ class _ProfilePageState extends State<ProfilePage> {
                             fontWeight: FontWeight.bold,
                             color: black),
                       ),
-                      Icon(Icons.settings)
+                      InkWell(
+                        onTap: () {
+                          ServiceUtils().showLogoutPopup(context, () async {
+                            logOut();
+                            Navigator.pushAndRemoveUntil<dynamic>(
+                              context,
+                              MaterialPageRoute<dynamic>(
+                                builder: (BuildContext context) => LoginPage(),
+                              ),
+                              (route) => false,
+                            );
+                          });
+                        },
+                        child: SvgPicture.asset(
+                          'assets/icons/logout_icon.svg',
+                          fit: BoxFit.fill,
+                          height: 25,
+                          width: 25,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -127,10 +158,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                   width: 85,
                                   height: 85,
                                   decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: NetworkImage("$profile_image"),
-                                          fit: BoxFit.cover)),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: Text(userById!.fullName
+                                        .toString()
+                                        .split("")[0][0],style: TextStyle(
+                                      fontSize: (size.width - 40) * 0.2,
+                                      color: primary
+                                    ),),
+                                  ),
                                 ),
                               )
                             ],
@@ -143,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              userById?.fullName??"Employee name",
+                              userById?.fullName ?? "Employee name",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -153,7 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               height: 10,
                             ),
                             Text(
-                              userById?.org??"Company Name",
+                              userById?.org ?? "Company Name",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -200,7 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 15,
                               ),
                               Text(
-                                userById?.designation??"Employee designation",
+                                userById?.designation ?? "Employee designation",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
@@ -208,18 +245,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ],
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: white)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(13.0),
-                              child: Text(
-                                "About Me",
-                                style: TextStyle(color: white),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ),
@@ -247,7 +272,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 10,
                 ),
                 Text(
-                  userById?.email??"Employee email",
+                  userById?.email ?? "Employee email",
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
@@ -267,7 +292,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 10,
                 ),
                 Text(
-                  userById?.dateOfBirth??"Employee DOB",
+                  userById?.dateOfBirth ?? "Employee DOB",
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
@@ -279,5 +304,10 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
+  }
+
+  logOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("authToken");
   }
 }

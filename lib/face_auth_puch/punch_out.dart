@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../api_models/user_put_location_response.dart';
 import 'dart:async';
 import 'dart:io';
@@ -41,6 +42,15 @@ class PunchOutState extends State<PunchOut> {
   late LocationPermission permission;
   Position? position;
   String long = "", lat = "";
+  String? authToken;
+
+  getLoginData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    authToken = prefs.getString("authToken");
+    print(authToken);
+    putLatLong();
+    return authToken;
+  }
 
   Future<void> putLatLong() async {
 
@@ -52,7 +62,7 @@ class PunchOutState extends State<PunchOut> {
     };
     //encode Map to JSON
     String body = json.encode(data);
-    var url = 'https://attandance-server.onrender.com/user/639c00a212b97a003403fd31';
+    var url = 'https://attandance-server.onrender.com/user/${authToken}';
     Response response = await http.put(
       Uri.parse(url),body: body,headers: {
       "Content-Type": "application/json"
@@ -124,7 +134,7 @@ class PunchOutState extends State<PunchOut> {
       ),
         body: Center(
           child: MaterialButton(
-            onPressed: () { putLatLong(); },
+            onPressed: () { getLoginData(); },
             child: Text("Confirm Punch Out"),
             height: 50,
             minWidth: 100,

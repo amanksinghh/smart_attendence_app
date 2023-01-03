@@ -7,14 +7,18 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/face_auth_puch/punch_out.dart';
 import 'package:smart_attendence_app/pages/count_up_timer.dart';
 
 import '../api_models/user_by_id_response.dart';
+import '../dialogs/CustomProgressDialog.dart';
 import '../face_auth_puch/punch_in.dart';
 import '../json/create_budget_json.dart';
 import '../theme/colors.dart';
 import 'package:timeline_tile/timeline_tile.dart';
+
+import '../utils/service_utilities.dart';
 
 var profile_image =
     "https://media-exp1.licdn.com/dms/image/C5603AQEob5l8e06qQg/profile-displayphoto-shrink_800_800/0/1652278654609?e=1658361600&v=beta&t=IOrm1Y-2XbJ-wkn8Zy3ZGbcAssPC2gI4jfs4DyShYs4";
@@ -29,11 +33,21 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
   late DateTime _lastButtonPress;
   String? _pressDuration;
   late Timer _ticker;
+  bool isDialogShowing = false;
+  String? authToken;
 
   Users? userById;
 
+  getLoginData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    authToken = prefs.getString("authToken");
+    print(authToken);
+    getUsers();
+    return authToken;
+  }
+
   Future<void> getUsers() async {
-    var url = 'https://attandance-server.onrender.com/user/639c00a212b97a003403fd31';
+    var url = 'https://attandance-server.onrender.com/user/${authToken}';
     Response response = await http.get(Uri.parse(url));
     if(response.statusCode == 200){
 
@@ -41,8 +55,6 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
         var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
         var userDetails = userListResponse.users;
         userById = userDetails;
-        print("User by ID API called");
-        print(userById?.entry);
       });
 
     }
@@ -59,12 +71,11 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
       );
     }
   }
+
   @override
   void initState() {
     super.initState();
-    setState(() {
-      getUsers();
-    });
+    getLoginData();
   }
 
   void functionThatSetsTheState(){
@@ -75,7 +86,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
     });
   }
 
-  void functionThatStartsTimer(){
+  functionThatStartsTimer(){
     setState(() {
       getUsers();
       _lastButtonPress = DateTime.now();
@@ -134,7 +145,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
           Container(
             decoration: BoxDecoration(color: white, boxShadow: [
               BoxShadow(
-                color: grey.withOpacity(0.3),
+                color: grey.withOpacity(0.01),
                 spreadRadius: 6,
                 blurRadius: 3,
                 // changes position of shadow
@@ -168,6 +179,14 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                                 child: Container(
                                   width: 85,
                                   height: 85,
+                                  child: Center(
+                                    child: Text(userById!.fullName
+                                        .toString()
+                                        .split("")[0][0],style: TextStyle(
+                                        fontSize: (size.width - 40) * 0.2,
+                                        color: primary
+                                    ),),
+                                  ),
                                 ),
                               )
                             ],
@@ -353,7 +372,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                 children: List.generate(categories.length, (index) {
                   return GestureDetector(
                 onTap: () {
-                  setState(() {
+
                     activeCategory = index;
                     switch (index) {
                       case 0:
@@ -374,7 +393,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                             .whenComplete(() => {functionThatSetsTheState()});
                         break;
                     }
-                  });
+
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -507,28 +526,50 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
   }
 
   void checkIpAddress() async {
+    showLoader(context);
     final ipv4 = await Ipify.ipv4();
     print(" IPV4 : ${ipv4}"); // 98.207.254.136
     final ipv6 = await Ipify.ipv64();
     print("IPV6 : ${ipv6}"); // 98.207.254.136 or 2a00:1450:400f:80d::200e
     final ipv4json = await Ipify.ipv64(format: Format.JSON);
-    print(ipv4json); //{"ip":"98.207.254.136"} or {"ip":"2a00:1450:400f:80d::200e"}
+    print(
+        ipv4json); //{"ip":"98.207.254.136"} or {"ip":"2a00:1450:400f:80d::200e"}
     String checkIpv6 = "2409:4041:261e:e71a:7d43:d18:7e36:a6c0";
     if (ipv6 == checkIpv6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Connected to Organization Wifi."),
-            backgroundColor: Colors.green,
-          ));
+      hideLoader(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Connected to Organization Wifi."),
+        backgroundColor: Colors.green,
+      ));
       Navigator.push(
               context, MaterialPageRoute(builder: (context) => const PunchIn()))
           .whenComplete(() => {functionThatStartsTimer()});
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Please Connect to Organization Wifi."),
-            backgroundColor: Colors.red,
-          ));
+      hideLoader(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Please Connect to Organization Wifi."),
+        backgroundColor: Colors.red,
+      ));
     }
   }
+  showLoader(BuildContext context) {
+    if (!isDialogShowing) {
+      isDialogShowing = true;
+      showDialog(
+          context: context,
+          barrierColor: Colors.transparent,
+          builder: (BuildContext context) {
+            return const CustomProgressDialog();
+          }).then((value) {
+        isDialogShowing = false;
+      });
+    }
+  }
+
+  hideLoader(BuildContext context) {
+    if (isDialogShowing) {
+      Navigator.pop(context);
+    }
+  }
+
 }

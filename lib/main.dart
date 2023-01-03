@@ -4,6 +4,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:smart_attendence_app/onboarding/onboarding_screen.dart';
 import 'package:smart_attendence_app/pages/login_utils/login_page.dart';
 import 'package:smart_attendence_app/pages/root_app.dart';
+import 'package:smart_attendence_app/pages/splash/splash_screen.dart';
 import 'package:smart_attendence_app/services/locator.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -45,19 +46,21 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.light,
             splashColor: Color.fromARGB(255, 245, 112, 51),
           ),
-          home: AnimatedSplashScreen(
-              splash: Container(
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  height: 1000,
-                  width: 1000,
-                ),
-              ),
-              duration: 2000, // splash screen
-              nextScreen: LoginPage(),
-              splashTransition: SplashTransition.scaleTransition,
-              pageTransitionType: PageTransitionType.fade,
-              backgroundColor: Color.fromARGB(255, 255, 254, 254))),
+          home: const SplashScreen()
+          // AnimatedSplashScreen(
+          //     splash: Container(
+          //       child: Image.asset(
+          //         'assets/images/logo.png',
+          //         height: 1000,
+          //         width: 1000,
+          //       ),
+          //     ),
+          //     duration: 2000, // splash screen
+          //     nextScreen: LoginPage(),
+          //     splashTransition: SplashTransition.scaleTransition,
+          //     pageTransitionType: PageTransitionType.fade,
+          //     backgroundColor: Color.fromARGB(255, 255, 254, 254))
+      ),
     );
   }
 }

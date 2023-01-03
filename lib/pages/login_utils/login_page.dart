@@ -8,6 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_attendence_app/utils/service_utilities.dart';
 import '../../api_models/user_login.dart';
 import '../../dialogs/CustomProgressDialog.dart';
 import '../root_app.dart';
@@ -109,7 +111,7 @@ class LoginPageState extends State<LoginPage>
     //encode Map to JSON
     String body = json.encode(data);
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      showLoader(context);
+      ServiceUtils().showLoader(context);
       var url = 'https://attandance-server.onrender.com/user/login';
       Response response = await http.post(
          Uri.parse(url),body: body,headers: {
@@ -117,12 +119,14 @@ class LoginPageState extends State<LoginPage>
       },
       );
       if(response.statusCode == 200){
-        hideLoader(context);
+        ServiceUtils().hideLoader(context);
         var userLoginResponse = UserLoginResponse.fromJson(json.decode(response.body));
         if(userLoginResponse.status == "SUCCESS")
           {
             var userDetails = userLoginResponse.data!;
             _data = userDetails.first;
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setString("authToken", _data.sId!);
             Fluttertoast.showToast(
                 msg: "${_data.fullName} : ${userLoginResponse.message}",
                 toastLength: Toast.LENGTH_SHORT,
@@ -344,24 +348,6 @@ class LoginPageState extends State<LoginPage>
     );
   }
 
-  showLoader(BuildContext context) {
-    if (!isDialogShowing) {
-      isDialogShowing = true;
-      showDialog(
-          context: context,
-          barrierColor: Colors.transparent,
-          builder: (BuildContext context) {
-            return const CustomProgressDialog();
-          }).then((value) {
-        isDialogShowing = false;
-      });
-    }
-  }
 
-  hideLoader(BuildContext context) {
-    if (isDialogShowing) {
-      Navigator.pop(context);
-    }
-  }
 
 }

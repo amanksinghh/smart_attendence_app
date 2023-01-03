@@ -54,23 +54,29 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   bool haspermission = false;
   late LocationPermission permission;
   Position? position;
-  String long = "", lat = "";
+  String? long , lat ;
   late StreamSubscription<Position> positionStream;
   String? formattedDate;
   late bool mounted;
-
+  String? authToken;
  // Users? users;
   Users? userById;
   Data? putResponseData;
 
+  getLoginData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    authToken = prefs.getString("authToken");
+    print(authToken);
+    getUsers();
+    return authToken;
+  }
+
   Future<void> getUsers() async {
-    var url = 'https://attandance-server.onrender.com/user/639c00a212b97a003403fd31';
+    var url = 'https://attandance-server.onrender.com/user/${authToken}';
     Response response = await http.get(Uri.parse(url));
     if(response.statusCode == 200){
       var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
       var userDetails = userListResponse.users;
-      userById = userDetails;
-      print("User by ID API called");
     }
     else
     {
@@ -98,16 +104,16 @@ class _AuthActionButtonState extends State<AuthActionButton> {
       };
       //encode Map to JSON
       String body = json.encode(data);
-      var url = 'https://attandance-server.onrender.com/user/639c00a212b97a003403fd31';
+      var url = 'https://attandance-server.onrender.com/user/${authToken}';
       Response response = await http.put(
-        Uri.parse(url),body: body,headers: {
-        "Content-Type": "application/json"
-      },
+        Uri.parse(url),
+        body: body,
+        headers: {"Content-Type": "application/json"},
       );
-      if(response.statusCode == 200){
-        var userPutResponse = UserPutLocationResponse.fromJson(json.decode(response.body));
-        if(userPutResponse.status == true)
-        {
+      if (response.statusCode == 200) {
+        var userPutResponse =
+            UserPutLocationResponse.fromJson(json.decode(response.body));
+        if (userPutResponse.status == true) {
           var userDetails = userPutResponse.data!;
           putResponseData = userDetails;
           print(putResponseData?.designation);
@@ -119,13 +125,10 @@ class _AuthActionButtonState extends State<AuthActionButton> {
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.green,
               textColor: Colors.white,
-              fontSize: 16.0
-          );
+              fontSize: 16.0);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => RootApp(pageIndex: 4)));
-        }
-        else
-        {
+        } else {
           Fluttertoast.showToast(
               msg: "${userPutResponse.status} : Please try again",
               toastLength: Toast.LENGTH_SHORT,
@@ -133,11 +136,9 @@ class _AuthActionButtonState extends State<AuthActionButton> {
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.red,
               textColor: Colors.white,
-              fontSize: 16.0
-          );
+              fontSize: 16.0);
         }
-      }
-      else if(response.statusCode != 200){
+      } else if (response.statusCode != 200) {
         Fluttertoast.showToast(
             msg: "${response.statusCode} : Please try again",
             toastLength: Toast.LENGTH_SHORT,
@@ -145,13 +146,9 @@ class _AuthActionButtonState extends State<AuthActionButton> {
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
+            fontSize: 16.0);
       }
-
-    }
-    else {
-      print("You are Outside of Organisation ! Cannot Punch In. ");
+    } else {
       Fluttertoast.showToast(
           msg: "You are Outside of Organisation ! Cannot Punch In. ",
           toastLength: Toast.LENGTH_SHORT,
@@ -159,8 +156,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0
-      );
+          fontSize: 16.0);
     }
   }
 
@@ -224,7 +220,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
             formattedDate = DateFormat.Hm().format(date!);
             amount.text = '$date';
             getLocation();
-            getUsers();
+            getLoginData();
           },
         );
         PersistentBottomSheetController bottomSheetController =
@@ -344,41 +340,19 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     );
   }
 
+
   getLocation() async {
-    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    print(position?.longitude);
-    print(position?.latitude);
+    LocationPermission permission = await Geolocator.checkPermission();
 
-    long = position?.longitude.toString() ?? "";
-    lat = position?.latitude.toString() ?? "";
-
-    setState(() {
-      //refresh UI
-    });
-
-    LocationSettings locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.high, //accuracy of the location data
-      distanceFilter: 100, //minimum distance (measured in meters) a
-      //device must move horizontally before an update event is generated;
-    );
-
-    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
-        locationSettings: locationSettings).listen((Position position) {
-      print(position.longitude); //Output: 80.24599079
-      print(position.latitude); //Output: 29.6593457
-
-      long = position.longitude.toString();
-      lat = position.latitude.toString();
-
-      setState(() {
-        //refresh UI on update
-      });
-    });
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      print("Permission not granted");
+      Geolocator.requestPermission();
+    } else {
+      position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+      print(position!.latitude.toString());
+      print(position!.longitude.toString());
+    }
   }
-
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
 }

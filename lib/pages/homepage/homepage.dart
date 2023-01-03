@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api_models/user_by_id_response.dart';
 import '../../json/daily_json.dart';
@@ -21,20 +23,31 @@ class _HomePageState extends State<HomePage> {
   bool searchbarVisible = false;
   String? formattedDate;
   DateTime? date;
-
+  late DateTime targetMonth, initialDate;
+  late String month, year;
+  int noOfDaysCurrentMonth = 0;
+  String? formattedDated;
+  String? graphFormattedDate;
+  bool isDataRefreshed = false, isCountRefreshed = false;
+  String? authToken;
   Users? userById;
 
+  getLoginData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    authToken = prefs.getString("authToken");
+    print(authToken);
+    getUsers();
+    return authToken;
+  }
+
   Future<void> getUsers() async {
-    var url = 'https://attandance-server.onrender.com/user/639c00a212b97a003403fd31';
+    var url = 'https://attandance-server.onrender.com/user/${authToken}';
     Response response = await http.get(Uri.parse(url));
     if(response.statusCode == 200){
-
       setState(() {
         var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
         var userDetails = userListResponse.users;
         userById = userDetails;
-        print("User by ID API called");
-        print(userById?.entry);
       });
 
     }
@@ -55,16 +68,20 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    targetMonth = DateTime.now();
+    initialDate = DateTime.now();
+    formattedDated = DateFormat.yMd().format(initialDate);
+    graphFormattedDate = DateFormat('yyyy-MM-dd').format(initialDate);
     setState(() {
       date = DateTime.now();
       formattedDate = DateFormat.MMMd().format(date!);
-      getUsers();
+      getLoginData();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    getUsers();
+    getLoginData();
     return Scaffold(
       backgroundColor: grey.withOpacity(0.05),
       body: getBody(),
@@ -101,97 +118,62 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold,
                             color: black),
                       ),
-                      Expanded(
-                        child: Visibility(
-                            visible: searchbarVisible,
-                            child: Stack(children: [
-                              Container(
-                                height: 29,
-                                margin: const EdgeInsets.only(
-                                    top: 10, bottom: 10,left: 10),
-                                child: Material(
-                                  borderRadius: BorderRadius.circular(5),
-                                  elevation: 0,
-                                  child: TextFormField(
-                                    autofocus: true,
-                                    // focusNode: searchbarFocus,
-                                    controller: searchController,
-                                    onChanged: (value) {
-                                      setState(() {
-
-                                        searchController.text
-                                            .split(" ")
-                                            .first
-                                            .trim();
-                                        searchController.text
-                                            .split(" ")
-                                            .last
-                                            .trim();
-                                      });
-                                    },
-                                    decoration: const InputDecoration(
-                                        contentPadding: EdgeInsets.all(8),
-                                        isDense: true,
-                                        hintText: "Search",
-                                        hintStyle: TextStyle(
-                                          fontSize: 15,
-                                        ),
-                                        border: InputBorder.none),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                  right: 0,
-                                  top: 4,
-                                  child: Container(
-                                      height: 12,
-                                      width: 12,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(6),
-                                          color: grey),
-                                      child: IconButton(
-                                        padding: EdgeInsets.zero,
-                                        onPressed: () {
-                                          setState(() {
-                                            searchbarVisible = false;
-                                            searchController.text="";
-                                            searchController.text.split(" ").first.trim();
-                                            searchController.text.split(" ").last.trim();
-                                          });
-                                        },
-                                        alignment: Alignment.center,
-                                        icon: const Icon(
-                                          Icons.close,
-                                          size: 10,
-                                        ),
-                                        color: white,
-
-                                      )))
-                            ])),
-                      ),
-                      Visibility(
-                        visible: !searchbarVisible,
-                        child: IconButton(
-                            onPressed: () {
-                              if (searchbarVisible == false) {
-                                setState(() {
-                                  searchbarVisible = true;
-                                });
+                      GestureDetector(
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: initialDate,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime.now());
+                          if (pickedDate != null) {
+                            setState(() {
+                              isDataRefreshed = false;
+                              isCountRefreshed = false;
+                              //ServiceUtils.printLog("pickedDate $pickedDate");
+                              if (pickedDate.month == DateTime.now().month) {
+                                targetMonth = DateTime(pickedDate.year,
+                                    pickedDate.month, DateTime.now().day);
                               } else {
-                                setState(() {
-                                  searchbarVisible = false;
-                                });
+                                targetMonth =
+                                    DateTime(pickedDate.year, pickedDate.month, 1);
                               }
-                            },
-                            icon: Icon(
-                              Icons.search,
-                              color: Theme.of(context).primaryColor,
-                            )),
+                              //ServiceUtils.printLog("targetMonth $targetMonth");
+                              initialDate = DateTime(pickedDate.year,
+                                  pickedDate.month, pickedDate.day);
+                              formattedDated = DateFormat.yMd().format(initialDate);
+                              print(formattedDated);
+                              graphFormattedDate =
+                                  DateFormat('yyyy-MM-dd').format(initialDate);
+                              print(graphFormattedDate);
+                            });
+                          }
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 0),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icons/ic_calenderblue.svg',
+                                fit: BoxFit.fill,
+                                height: 20,
+                                width: 20,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "$formattedDated",
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.blue),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: 25,
+                    height: 15,
                   ),
                   Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
