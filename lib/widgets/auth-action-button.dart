@@ -2,27 +2,20 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
-import 'package:image/image.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/network_api_calls/api_calls.dart';
-import 'package:smart_attendence_app/pages/root_app.dart';
+
 import '../api_models/user_by_id_response.dart';
 import '../api_models/user_put_location_response.dart';
-import '../db/databse_helper.dart';
 import '../db/user.model.dart';
-import '../pages/homepage/homepage.dart';
-import '../pages/profile.dart';
 import '../services/camera.service.dart';
 import '../services/locator.dart';
 import '../services/ml_service.dart';
-import '../utils/shared_pref.dart';
 import 'app_button.dart';
-import 'app_text_field.dart';
-import 'package:http/http.dart' as http;
 
 class AuthActionButton extends StatefulWidget {
   AuthActionButton(
@@ -30,9 +23,11 @@ class AuthActionButton extends StatefulWidget {
       required this.onPressed,
       required this.isLogin,
       required this.reload});
+
   final Function onPressed;
   final bool isLogin;
   final Function reload;
+
   @override
   _AuthActionButtonState createState() => _AuthActionButtonState();
 }
@@ -55,12 +50,14 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   bool haspermission = false;
   late LocationPermission permission;
   Position? position;
-  String? long , lat ;
+  String? long, lat;
+
   late StreamSubscription<Position> positionStream;
   String? formattedDate;
   late bool mounted;
   String? authToken;
- // Users? users;
+
+  // Users? users;
   Users? userById;
   Data? putResponseData;
 
@@ -75,12 +72,11 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   Future<void> getUsers() async {
     var url = 'https://attandance-server.onrender.com/user/${authToken}';
     Response response = await http.get(Uri.parse(url));
-    if(response.statusCode == 200){
-      var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
+    if (response.statusCode == 200) {
+      var userListResponse =
+          UserByIdResponse.fromJson(json.decode(response.body));
       var userDetails = userListResponse.users;
-    }
-    else
-    {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Something went wrong !"),
@@ -110,7 +106,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         }
         getLocation();
         setState(
-              () {
+          () {
             date = DateTime.now();
             formattedDate = DateFormat.Hm().format(date!);
             amount.text = '$date';
@@ -191,14 +187,13 @@ class _AuthActionButtonState extends State<AuthActionButton> {
               children: [
                 !widget.isLogin
                     ? Text(
-                      "LAT: ${position?.latitude}, LNG: ${position?.longitude}"
-                      )
+                        "LAT: ${position?.latitude}, LNG: ${position?.longitude}")
                     : Container(),
                 SizedBox(height: 10),
                 widget.isLogin && predictedUser == null
                     ? Container()
                     : Text(
-                          "Entry Time: ${formattedDate}",
+                        "Entry Time: ${formattedDate}",
                       ),
                 SizedBox(height: 10),
                 Divider(),
@@ -219,7 +214,8 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                             text: 'Punch In',
                             onPressed: () {
                               //await _signUp(context);
-                              ApiCalls().putLatLong(context, position, formattedDate, authToken);
+                              ApiCalls().putLatLong(
+                                  context, position, formattedDate, authToken);
                             },
                             icon: Icon(
                               Icons.person_add,
@@ -234,7 +230,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
       ),
     );
   }
-
 
   getLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();

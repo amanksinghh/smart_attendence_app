@@ -9,11 +9,11 @@ import 'package:http/http.dart' as http;
 import '../api_models/user_put_location_response.dart';
 import '../pages/root_app.dart';
 
-class ApiCalls{
+class ApiCalls {
   Data? putResponseData;
 
-
-  putLatLong(BuildContext context,Position? position, String? formattedDate, String? authToken) async {
+  putLatLong(BuildContext context, Position? position, String? formattedDate,
+      String? authToken) async {
     //&& userById?.orgLatitude == position?.latitude  && userById?.orgLongitude == position?.longitude
 
     if (position?.latitude != null) {
@@ -25,7 +25,7 @@ class ApiCalls{
       };
       //encode Map to JSON
       String body = json.encode(data);
-      var url = 'https://attandance-server.onrender.com/user/${authToken}';
+      var url = 'https://attandance-server.onrender.com/user/$authToken';
       Response response = await http.put(
         Uri.parse(url),
         body: body,
@@ -33,7 +33,7 @@ class ApiCalls{
       );
       if (response.statusCode == 200) {
         var userPutResponse =
-        UserPutLocationResponse.fromJson(json.decode(response.body));
+            UserPutLocationResponse.fromJson(json.decode(response.body));
         if (userPutResponse.status == true) {
           var userDetails = userPutResponse.data!;
           putResponseData = userDetails;
@@ -50,9 +50,8 @@ class ApiCalls{
           Navigator.pushAndRemoveUntil<dynamic>(
             context,
             MaterialPageRoute<dynamic>(
-              builder: (BuildContext context) => RootApp(pageIndex: 4)
-            ),
-                (route) => false,
+                builder: (BuildContext context) => RootApp(pageIndex: 4)),
+            (route) => false,
           );
         } else {
           Fluttertoast.showToast(

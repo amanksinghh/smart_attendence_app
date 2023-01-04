@@ -3,22 +3,17 @@ import 'dart:convert';
 
 import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/face_auth_puch/punch_out.dart';
-import 'package:smart_attendence_app/pages/count_up_timer.dart';
 
 import '../api_models/user_by_id_response.dart';
 import '../dialogs/CustomProgressDialog.dart';
 import '../face_auth_puch/punch_in.dart';
 import '../json/create_budget_json.dart';
 import '../theme/colors.dart';
-import 'package:timeline_tile/timeline_tile.dart';
-
-import '../utils/service_utilities.dart';
 
 class CreatBudgetPage extends StatefulWidget {
   @override
@@ -45,17 +40,14 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
   Future<void> getUsers() async {
     var url = 'https://attandance-server.onrender.com/user/${authToken}';
     Response response = await http.get(Uri.parse(url));
-    if(response.statusCode == 200){
-
+    if (response.statusCode == 200) {
       setState(() {
-        var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
+        var userListResponse =
+            UserByIdResponse.fromJson(json.decode(response.body));
         var userDetails = userListResponse.users;
         userById = userDetails;
       });
-
-    }
-    else
-    {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Something went wrong !"),
@@ -74,20 +66,19 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
     getLoginData();
   }
 
-  void functionThatSetsTheState(){
+  void functionThatSetsTheState() {
     setState(() {
       getUsers();
       _ticker.cancel();
-
     });
   }
 
-  functionThatStartsTimer(){
+  functionThatStartsTimer() {
     setState(() {
       getUsers();
       _lastButtonPress = DateTime.now();
       _updateTimer();
-      _ticker = Timer.periodic(Duration(seconds:1),(_)=>_updateTimer());
+      _ticker = Timer.periodic(Duration(seconds: 1), (_) => _updateTimer());
     });
   }
 
@@ -176,12 +167,14 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                                   width: 85,
                                   height: 85,
                                   child: Center(
-                                    child: Text("${userById?.fullName ?? "--"}"
-                                        .toString()
-                                        .split("")[0][0],style: TextStyle(
-                                        fontSize: (size.width - 40) * 0.2,
-                                        color: primary
-                                    ),),
+                                    child: Text(
+                                      "${userById?.fullName ?? "--"}"
+                                          .toString()
+                                          .split("")[0][0],
+                                      style: TextStyle(
+                                          fontSize: (size.width - 40) * 0.2,
+                                          color: primary),
+                                    ),
                                   ),
                                 ),
                               )
@@ -366,30 +359,28 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
             // height: MediaQuery.of(context).size.height ,
             child: Row(
                 children: List.generate(categories.length, (index) {
-                  return GestureDetector(
+              return GestureDetector(
                 onTap: () {
+                  activeCategory = index;
+                  switch (index) {
+                    case 0:
+                      checkIpAddress();
+                      break;
+                    case 1:
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => const CountUpTimer()));
+                      break;
 
-                    activeCategory = index;
-                    switch (index) {
-                      case 0:
-                        checkIpAddress();
-                        break;
-                      case 1:
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => const CountUpTimer()));
-                        break;
-
-                      case 2:
-                        Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const PunchOut()))
-                            .whenComplete(() => {functionThatSetsTheState()});
-                        break;
-                    }
-
+                    case 2:
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const PunchOut()))
+                          .whenComplete(() => {functionThatSetsTheState()});
+                      break;
+                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -548,6 +539,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
       ));
     }
   }
+
   showLoader(BuildContext context) {
     if (!isDialogShowing) {
       isDialogShowing = true;
@@ -567,5 +559,4 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
       Navigator.pop(context);
     }
   }
-
 }

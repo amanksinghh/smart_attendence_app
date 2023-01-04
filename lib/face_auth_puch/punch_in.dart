@@ -1,15 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-import 'package:camera/camera.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:smart_attendence_app/utils/shared_pref.dart';
 
-import '../api_models/user_response.dart';
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
+
 import '../services/camera.service.dart';
 import '../services/face_detector_service.dart';
 import '../services/locator.dart';
@@ -17,7 +13,6 @@ import '../services/ml_service.dart';
 import '../widgets/FacePainter.dart';
 import '../widgets/auth-action-button.dart';
 import '../widgets/camera_header.dart';
-import 'package:http/http.dart' as http;
 
 class PunchIn extends StatefulWidget {
   const PunchIn({Key? key}) : super(key: key);
@@ -40,11 +35,10 @@ class PunchInState extends State<PunchIn> {
   bool _bottomSheetVisible = false;
 
   // service injection
-  final FaceDetectorService _faceDetectorService = locator<FaceDetectorService>();
+  final FaceDetectorService _faceDetectorService =
+      locator<FaceDetectorService>();
   final CameraService _cameraService = locator<CameraService>();
   final MLService _mlService = locator<MLService>();
-
-
 
   @override
   void initState() {
@@ -121,7 +115,7 @@ class PunchInState extends State<PunchIn> {
             }
           } else {
             setState(() {
-              faceDetected=null;
+              faceDetected = null;
             });
           }
 
@@ -185,7 +179,7 @@ class PunchInState extends State<PunchIn> {
               child: Container(
                 width: width,
                 height:
-                width * _cameraService.cameraController!.value.aspectRatio,
+                    width * _cameraService.cameraController!.value.aspectRatio,
                 child: Stack(
                   fit: StackFit.expand,
                   children: <Widget>[
@@ -216,10 +210,10 @@ class PunchInState extends State<PunchIn> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: !_bottomSheetVisible
             ? AuthActionButton(
-          onPressed: onShot,
-          isLogin: false,
-          reload: _reload,
-        )
+                onPressed: onShot,
+                isLogin: false,
+                reload: _reload,
+              )
             : Container());
   }
 }

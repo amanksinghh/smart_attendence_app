@@ -23,13 +23,15 @@ class _SplashScreenState extends State<SplashScreen> {
     getLoginData();
     Future.delayed(const Duration(seconds: 4), () {
       if (authToken == null) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) =>  LoginPage()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
       } else {
         Navigator.pushAndRemoveUntil<dynamic>(
           context,
           MaterialPageRoute<dynamic>(
-            builder: (BuildContext context) => RootApp(pageIndex: 0,),
+            builder: (BuildContext context) => RootApp(
+              pageIndex: 0,
+            ),
           ),
           (route) => false,
         );

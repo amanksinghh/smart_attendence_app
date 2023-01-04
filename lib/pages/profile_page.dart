@@ -37,17 +37,14 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> getUsers() async {
     var url = 'https://attandance-server.onrender.com/user/${authToken}';
     Response response = await http.get(Uri.parse(url));
-    if(response.statusCode == 200){
-
+    if (response.statusCode == 200) {
       setState(() {
-        var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
+        var userListResponse =
+            UserByIdResponse.fromJson(json.decode(response.body));
         var userDetails = userListResponse.users;
         userById = userDetails;
       });
-
-    }
-    else
-    {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Something went wrong !"),
@@ -59,6 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -66,7 +64,6 @@ class _ProfilePageState extends State<ProfilePage> {
       getLoginData();
     });
   }
-
 
   @override
   Widget build(BuildContext context) {

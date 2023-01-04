@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class CountUpTimer extends StatefulWidget {
@@ -9,11 +10,9 @@ class CountUpTimer extends StatefulWidget {
 }
 
 class _CountUpTimerState extends State<CountUpTimer> {
-
   late DateTime _lastButtonPress;
   late String _pressDuration;
   late Timer _ticker;
-
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +34,15 @@ class _CountUpTimerState extends State<CountUpTimer> {
       ),
     );
   }
+
   @override
   void initState() {
     super.initState();
-   // final lastPressString = sharedPreferences.getString("lastButtonPress");
+    // final lastPressString = sharedPreferences.getString("lastButtonPress");
     _lastButtonPress = DateTime.now();
     _updateTimer();
-    _ticker = Timer.periodic(Duration(seconds:1),(_)=>_updateTimer());
+    _ticker = Timer.periodic(Duration(seconds: 1), (_) => _updateTimer());
   }
-
 
   @override
   void dispose() {

@@ -9,10 +9,12 @@ class AppButton extends StatelessWidget {
         Icons.add,
         color: Colors.white,
       )});
+
   final void Function()? onPressed;
   final String? text;
   final Icon icon;
   final Color color;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(

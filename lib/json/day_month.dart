@@ -16,4 +16,3 @@ List months = [
   {"label": "2018", "day": "May"},
   {"label": "2018", "day": "Jun"},
 ];
-

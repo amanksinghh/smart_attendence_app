@@ -1,8 +1,7 @@
-
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 
 import 'camera.service.dart';
 import 'locator.dart';
@@ -11,10 +10,13 @@ class FaceDetectorService {
   CameraService _cameraService = locator<CameraService>();
 
   late FaceDetector _faceDetector;
+
   FaceDetector get faceDetector => _faceDetector;
 
   List<Face> _faces = [];
+
   List<Face> get faces => _faces;
+
   bool get faceDetected => _faces.isNotEmpty;
 
   void initialize() {
@@ -34,12 +36,11 @@ class FaceDetectorService {
   Future<void> detectFacesFromImage(CameraImage image) async {
     InputImageData _firebaseImageMetadata = InputImageData(
       imageRotation:
-      _cameraService.cameraRotation ?? InputImageRotation.rotation0deg,
-      inputImageFormat:
-      InputImageFormatValue.fromRawValue(image.format.raw)!,
+          _cameraService.cameraRotation ?? InputImageRotation.rotation0deg,
+      inputImageFormat: InputImageFormatValue.fromRawValue(image.format.raw)!,
       size: Size(image.width.toDouble(), image.height.toDouble()),
       planeData: image.planes.map(
-            (Plane plane) {
+        (Plane plane) {
           return InputImagePlaneMetadata(
             bytesPerRow: plane.bytesPerRow,
             height: plane.height,
@@ -50,7 +51,10 @@ class FaceDetectorService {
     );
 
     Uint8List bytes = Uint8List.fromList(
-      image.planes.fold(<int>[], (List<int> previousValue, element) => previousValue..addAll(element.bytes)),
+      image.planes.fold(
+          <int>[],
+          (List<int> previousValue, element) =>
+              previousValue..addAll(element.bytes)),
     );
 
     InputImage _firebaseVisionImage = InputImage.fromBytes(
@@ -60,7 +64,6 @@ class FaceDetectorService {
 
     _faces = await _faceDetector.processImage(_firebaseVisionImage);
   }
-
 
   ///for new version
   // Future<void> detectFacesFromImage(CameraImage image) async {

@@ -1,13 +1,7 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:month_year_picker/month_year_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:smart_attendence_app/db/user.model.dart';
-
-import '../json/daily_json.dart';
-import '../json/day_month.dart';
-import '../theme/colors.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 
 class DailyPage extends StatefulWidget {
   @override
@@ -75,7 +69,7 @@ class _DailyPageState extends State<DailyPage> {
                                 ),
                                 textButtonTheme: TextButtonThemeData(
                                   style: TextButton.styleFrom(
-                                    foregroundColor : primary,
+                                    foregroundColor: primary,
                                   ),
                                 ),
                                 textTheme: const TextTheme(
@@ -92,10 +86,9 @@ class _DailyPageState extends State<DailyPage> {
                               ),
                               child: child!,
                             );
-                          }
-                      );
+                          });
 
-                      if(month != null) {
+                      if (month != null) {
                         setState(() {
                           _month = DateFormat('MMMM').format(month);
                         });
@@ -116,7 +109,6 @@ class _DailyPageState extends State<DailyPage> {
 
             //TODO: CARD CODE HERE........ FETCH API
 
-
             SizedBox(
               height: screenHeight / 1.45,
               child: StreamBuilder<QuerySnapshot>(
@@ -125,108 +117,120 @@ class _DailyPageState extends State<DailyPage> {
                     .doc()
                     .collection("Record")
                     .snapshots(),
-                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if(snapshot.hasData) {
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
                     final snap = snapshot.data!.docs;
                     return ListView.builder(
                       itemCount: snap.length,
                       itemBuilder: (context, index) {
-                        return DateFormat('MMMM').format(snap[index]['date'].toDate()) == _month ?
-                        Container(
-                          margin: EdgeInsets.only(top: index > 0 ? 12 : 0, left: 6, right: 6),
-                          height: 150,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 10,
-                                offset: Offset(2, 2),
-                              ),
-                            ],
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(),
-                                  decoration: BoxDecoration(
-                                    color: primary,
-                                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      DateFormat('EE\ndd').format(snap[index]['date'].toDate()),
-                                      style: TextStyle(
-                                        fontFamily: "NexaBold",
-                                        fontSize: screenWidth / 18,
-                                        color: Colors.white,
-                                      ),
+                        return DateFormat('MMMM')
+                                    .format(snap[index]['date'].toDate()) ==
+                                _month
+                            ? Container(
+                                margin: EdgeInsets.only(
+                                    top: index > 0 ? 12 : 0, left: 6, right: 6),
+                                height: 150,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 10,
+                                      offset: Offset(2, 2),
                                     ),
-                                  ),
+                                  ],
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
                                 ),
-                              ),
-                              Expanded(
-                                child: Column(
+                                child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "Check In",
-                                      style: TextStyle(
-                                        fontFamily: "NexaRegular",
-                                        fontSize: screenWidth / 20,
-                                        color: Colors.black54,
+                                    Expanded(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(),
+                                        decoration: BoxDecoration(
+                                          color: primary,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(20)),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            DateFormat('EE\ndd').format(
+                                                snap[index]['date'].toDate()),
+                                            style: TextStyle(
+                                              fontFamily: "NexaBold",
+                                              fontSize: screenWidth / 18,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                    Text(
-                                      snap[index]['checkIn'],
-                                      style: TextStyle(
-                                        fontFamily: "NexaBold",
-                                        fontSize: screenWidth / 18,
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Check In",
+                                            style: TextStyle(
+                                              fontFamily: "NexaRegular",
+                                              fontSize: screenWidth / 20,
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                          Text(
+                                            snap[index]['checkIn'],
+                                            style: TextStyle(
+                                              fontFamily: "NexaBold",
+                                              fontSize: screenWidth / 18,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Check Out",
+                                            style: TextStyle(
+                                              fontFamily: "NexaRegular",
+                                              fontSize: screenWidth / 20,
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                          Text(
+                                            snap[index]['checkOut'],
+                                            style: TextStyle(
+                                              fontFamily: "NexaBold",
+                                              fontSize: screenWidth / 18,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Check Out",
-                                      style: TextStyle(
-                                        fontFamily: "NexaRegular",
-                                        fontSize: screenWidth / 20,
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                    Text(
-                                      snap[index]['checkOut'],
-                                      style: TextStyle(
-                                        fontFamily: "NexaBold",
-                                        fontSize: screenWidth / 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ) : const SizedBox();
+                              )
+                            : const SizedBox();
                       },
                     );
                   } else {
                     return const SizedBox();
                   }
                 },
-
-            ),
-            )],
+              ),
+            )
+          ],
         ),
       ),
     );

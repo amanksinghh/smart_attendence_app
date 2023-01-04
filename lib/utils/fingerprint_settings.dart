@@ -1,9 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
-import 'dart:async';
-
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FingerprintAuth extends StatefulWidget {
   const FingerprintAuth({Key? key}) : super(key: key);

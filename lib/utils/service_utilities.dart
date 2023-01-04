@@ -1,9 +1,6 @@
-import 'dart:io';
-import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/material.dart';
 
 import '../dialogs/CustomProgressDialog.dart';
-import '../face_auth_puch/punch_in.dart';
 
 class ServiceUtils {
   bool isDialogShowing = false;
@@ -58,7 +55,6 @@ class ServiceUtils {
     }
   }
 
-
   showLogoutPopup(BuildContext context, Function onLogout) {
     showDialog(
         context: context,
@@ -66,14 +62,12 @@ class ServiceUtils {
           return AlertDialog(
             title: Text(
               "Logout",
-              style: TextStyle(
-                  fontSize: 16, color: Colors.black),
+              style: TextStyle(fontSize: 16, color: Colors.black),
             ),
             // To display the title it is optional
             content: Text(
               "Are you sure",
-              style: TextStyle(
-                  fontSize: 14, color: Colors.black),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
             // Message which will be pop up on the screen
             // Action widget which will provide the user to acknowledge the choice
@@ -86,8 +80,7 @@ class ServiceUtils {
                 // function used to perform after pressing the button
                 child: Text(
                   "No",
-                  style:
-                      TextStyle(fontSize: 14, color: Colors.blue),
+                  style: TextStyle(fontSize: 14, color: Colors.blue),
                 ),
               ),
               TextButton(
@@ -97,8 +90,7 @@ class ServiceUtils {
                 },
                 child: Text(
                   "Yes",
-                  style:
-                      TextStyle(fontSize: 14, color: Colors.blue),
+                  style: TextStyle(fontSize: 14, color: Colors.blue),
                 ),
               ),
             ],

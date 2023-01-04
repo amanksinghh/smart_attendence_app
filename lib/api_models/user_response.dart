@@ -38,18 +38,18 @@ class Users {
 
   Users(
       {this.sId,
-        this.fullName,
-        this.email,
-        this.phone,
-        this.password,
-        this.verified,
-        this.createdAt,
-        this.updatedAt,
-        this.iV,
-        this.entry,
-        this.exit,
-        this.latitude,
-        this.longitude});
+      this.fullName,
+      this.email,
+      this.phone,
+      this.password,
+      this.verified,
+      this.createdAt,
+      this.updatedAt,
+      this.iV,
+      this.entry,
+      this.exit,
+      this.latitude,
+      this.longitude});
 
   Users.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];

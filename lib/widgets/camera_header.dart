@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class CameraHeader extends StatelessWidget {
   CameraHeader(this.title, {this.onBackPressed});
+
   final String title;
   final void Function()? onBackPressed;
 

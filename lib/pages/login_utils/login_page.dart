@@ -1,15 +1,14 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smart_attendence_app/utils/service_utilities.dart';
+
 import '../../api_models/user_login.dart';
 import '../../dialogs/CustomProgressDialog.dart';
 import '../root_app.dart';
@@ -38,6 +37,7 @@ class LoginPageState extends State<LoginPage>
   bool success = false;
 
   final _formKey = GlobalKey<FormState>();
+
   //FingerPrint Settings
   final auth = LocalAuthentication();
   String authorized = " Not authorized";
@@ -65,7 +65,9 @@ class LoginPageState extends State<LoginPage>
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => RootApp(pageIndex: 0,),
+            builder: (context) => RootApp(
+              pageIndex: 0,
+            ),
           ),
         );
       }
@@ -103,10 +105,9 @@ class LoginPageState extends State<LoginPage>
 
   ///Login Functionality
   Future<void> login() async {
-
     Map data = {
       "email": emailController.text,
-      "password" : passwordController.text
+      "password": passwordController.text
     };
     //encode Map to JSON
     String body = json.encode(data);
@@ -114,53 +115,50 @@ class LoginPageState extends State<LoginPage>
       showLoader();
       var url = 'https://attandance-server.onrender.com/user/login';
       Response response = await http.post(
-         Uri.parse(url),body: body,headers: {
-        "Content-Type": "application/json"
-      },
+        Uri.parse(url),
+        body: body,
+        headers: {"Content-Type": "application/json"},
       );
       hideLoader();
-      if(response.statusCode == 200){
-        var userLoginResponse = UserLoginResponse.fromJson(json.decode(response.body));
-        if(userLoginResponse.status == "SUCCESS")
-          {
-            var userDetails = userLoginResponse.data!;
-            _data = userDetails.first;
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setString("authToken", _data.sId!);
-            Fluttertoast.showToast(
-                msg: "${_data.fullName} : ${userLoginResponse.message}",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => RootApp(pageIndex: 0,),
+      if (response.statusCode == 200) {
+        var userLoginResponse =
+            UserLoginResponse.fromJson(json.decode(response.body));
+        if (userLoginResponse.status == "SUCCESS") {
+          var userDetails = userLoginResponse.data!;
+          _data = userDetails.first;
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString("authToken", _data.sId!);
+          Fluttertoast.showToast(
+              msg: "${_data.fullName} : ${userLoginResponse.message}",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RootApp(
+                pageIndex: 0,
               ),
-            );
-          }
-        else
-          {
-            Fluttertoast.showToast(
-                msg: "${userLoginResponse.message}",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-          }
-      }
-      else if(response.statusCode != 200){
+            ),
+          );
+        } else {
+          Fluttertoast.showToast(
+              msg: "${userLoginResponse.message}",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      } else if (response.statusCode != 200) {
         print(response.statusCode);
         print('Something went wrong!');
       }
-     else {
+    } else {
       Fluttertoast.showToast(
           msg: "Please enter your email and password",
           toastLength: Toast.LENGTH_SHORT,
@@ -168,9 +166,8 @@ class LoginPageState extends State<LoginPage>
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
-          fontSize: 16.0
-      );
-    }}
+          fontSize: 16.0);
+    }
   }
 
   @override
@@ -203,7 +200,7 @@ class LoginPageState extends State<LoginPage>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image(
+          const Image(
             image: AssetImage("assets/images/aimtron_building.jpg"),
             fit: BoxFit.cover,
             colorBlendMode: BlendMode.darken,
@@ -214,7 +211,7 @@ class LoginPageState extends State<LoginPage>
             child: new Theme(
               data: ThemeData(
                   brightness: Brightness.dark,
-                  inputDecorationTheme: InputDecorationTheme(
+                  inputDecorationTheme: const InputDecorationTheme(
                     // hintStyle: new TextStyle(color: Colors.blue, fontSize: 20.0),
                     labelStyle: TextStyle(
                         color: Color.fromARGB(255, 70, 96, 241),
@@ -228,7 +225,7 @@ class LoginPageState extends State<LoginPage>
                     Container(
                       child: new ScaleTransition(
                         scale: _animation,
-                        child: Image(
+                        child: const Image(
                           image: AssetImage("assets/images/logo.png"),
                           height: 300,
                           width: 250,
@@ -251,11 +248,11 @@ class LoginPageState extends State<LoginPage>
                                     borderSide: BorderSide(
                                       color: success
                                           ? Colors.green
-                                          : Color.fromARGB(255, 240, 120, 84),
+                                          : const Color.fromARGB(255, 240, 120, 84),
                                       width: 2.0,
                                     ),
                                   ),
-                                  prefixIcon: Icon(Icons.person),
+                                  prefixIcon: const Icon(Icons.person),
                                   fillColor: Colors.white),
                               keyboardType: TextInputType.emailAddress,
                             ),
@@ -265,14 +262,14 @@ class LoginPageState extends State<LoginPage>
                                 controller: passwordController,
                                 decoration: InputDecoration(
                                   labelText: "Enter Password",
-                                  prefixIcon: Icon(Icons.lock),
+                                  prefixIcon: const Icon(Icons.lock),
                                   fillColor: Colors.white,
                                   hintText: "Password",
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       color: success
                                           ? Colors.green
-                                          : Color.fromARGB(255, 240, 120, 84),
+                                          : const Color.fromARGB(255, 240, 120, 84),
                                       width: 2.0,
                                     ),
                                   ),
@@ -281,16 +278,15 @@ class LoginPageState extends State<LoginPage>
                                 keyboardType: TextInputType.text,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20.0),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20.0),
                             ),
                             MaterialButton(
                               onPressed: () {
                                 login();
-                                //Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
                               },
-                              child: Text("Login"),
-                              color: Color.fromARGB(255, 240, 96, 30),
+                              child: const Text("Login"),
+                              color: const Color.fromARGB(255, 240, 96, 30),
                               textColor: Colors.white,
                               elevation: 50,
                               shape: RoundedRectangleBorder(
@@ -300,10 +296,10 @@ class LoginPageState extends State<LoginPage>
                               height: 40,
                               minWidth: 100,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10.0),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 10.0),
                             ),
-                            Text(
+                            const Text(
                               "OR",
                               style: TextStyle(
                                   color: Colors.white,
@@ -319,7 +315,7 @@ class LoginPageState extends State<LoginPage>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(
+                                      margin: const EdgeInsets.only(
                                           top: 12.0, left: 30.0, right: 20.0),
                                       child: Column(
                                         children: [

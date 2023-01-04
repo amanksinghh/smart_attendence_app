@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
-class SharedPrefUtils {
 
+class SharedPrefUtils {
   static saveStr(String key, String message) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString(key, message);
@@ -22,5 +22,4 @@ class SharedPrefUtils {
     //Remove double
     prefs.remove("doubleValue");
   }
-
 }

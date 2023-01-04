@@ -1,5 +1,6 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 
 class ApiService {
   Future<LoginApiResponse> apiCallLogin(Map<String, dynamic> params) async {
@@ -23,5 +24,4 @@ class LoginApiResponse {
   final String? error;
 
   LoginApiResponse({this.token, this.error});
-
 }

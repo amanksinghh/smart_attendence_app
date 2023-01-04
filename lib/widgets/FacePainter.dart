@@ -1,11 +1,13 @@
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 
 class FacePainter extends CustomPainter {
   FacePainter({required this.imageSize, required this.face});
+
   final Size imageSize;
   double? scaleX, scaleY;
   Face? face;
+
   @override
   void paint(Canvas canvas, Size size) {
     if (face == null) return;
@@ -45,10 +47,10 @@ class FacePainter extends CustomPainter {
 
 RRect _scaleRect(
     {required Rect rect,
-      required Size imageSize,
-      required Size widgetSize,
-      double scaleX = 1,
-      double scaleY = 1}) {
+    required Size imageSize,
+    required Size widgetSize,
+    double scaleX = 1,
+    double scaleY = 1}) {
   return RRect.fromLTRBR(
       (widgetSize.width - rect.left.toDouble() * scaleX),
       rect.top.toDouble() * scaleY,

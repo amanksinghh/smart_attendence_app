@@ -1,19 +1,18 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_attendence_app/pages/homepage/homepage.dart';
 
+import '../theme/colors.dart';
 import 'budget_page.dart';
 import 'create_budge_page.dart';
-import 'daily_page.dart';
 import 'profile_page.dart';
 import 'stats_page.dart';
-import '../theme/colors.dart';
-
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 class RootApp extends StatefulWidget {
   final int pageIndex;
+
   RootApp({required this.pageIndex});
 
   @override
@@ -21,9 +20,10 @@ class RootApp extends StatefulWidget {
 }
 
 class _RootAppState extends State<RootApp> {
-  late int pageIndex ;
+  late int pageIndex;
+
   List<Widget> pages = [
-   // DailyPage(),
+    // DailyPage(),
     HomePage(),
     StatsPage(),
     BudgetPage(),
@@ -63,12 +63,14 @@ class _RootAppState extends State<RootApp> {
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked);
   }
+
   Widget getBody() {
     return IndexedStack(
       index: pageIndex,
       children: pages,
     );
   }
+
   Widget getFooter() {
     List<IconData> iconItems = [
       Icons.dashboard_sharp,
@@ -99,5 +101,4 @@ class _RootAppState extends State<RootApp> {
       pageIndex = index;
     });
   }
-
 }

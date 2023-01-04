@@ -3,12 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api_models/user_by_id_response.dart';
-import '../../json/daily_json.dart';
 import '../../json/day_month.dart';
 import '../../theme/colors.dart';
 
@@ -42,16 +41,14 @@ class _HomePageState extends State<HomePage> {
   Future<void> getUsers() async {
     var url = 'https://attandance-server.onrender.com/user/${authToken}';
     Response response = await http.get(Uri.parse(url));
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       setState(() {
-        var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
+        var userListResponse =
+            UserByIdResponse.fromJson(json.decode(response.body));
         var userDetails = userListResponse.users;
         userById = userDetails;
       });
-
-    }
-    else
-    {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Something went wrong !"),

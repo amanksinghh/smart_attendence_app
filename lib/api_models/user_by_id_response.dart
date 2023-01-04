@@ -38,23 +38,23 @@ class Users {
 
   Users(
       {this.sId,
-        this.fullName,
-        this.email,
-        this.phone,
-        this.dateOfBirth,
-        this.orgLongitude,
-        this.orgLatitude,
-        this.org,
-        this.designation,
-        this.password,
-        this.verified,
-        this.createdAt,
-        this.updatedAt,
-        this.iV,
-        this.currLat,
-        this.currLong,
-        this.entry,
-        this.exit});
+      this.fullName,
+      this.email,
+      this.phone,
+      this.dateOfBirth,
+      this.orgLongitude,
+      this.orgLatitude,
+      this.org,
+      this.designation,
+      this.password,
+      this.verified,
+      this.createdAt,
+      this.updatedAt,
+      this.iV,
+      this.currLat,
+      this.currLong,
+      this.entry,
+      this.exit});
 
   Users.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
