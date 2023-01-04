@@ -8,6 +8,7 @@ import 'package:http/http.dart';
 import 'package:image/image.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smart_attendence_app/network_api_calls/api_calls.dart';
 import 'package:smart_attendence_app/pages/root_app.dart';
 import '../api_models/user_by_id_response.dart';
 import '../api_models/user_put_location_response.dart';
@@ -88,112 +89,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           dismissDirection: DismissDirection.down,
           elevation: 10,
         ),
-      );
-    }
-  }
-
-  Future<void> putLatLong() async {
-    //&& userById?.orgLatitude == position?.latitude  && userById?.orgLongitude == position?.longitude
-
-    if (position?.latitude != null) {
-      Map data = {
-        "currLat": position?.latitude.toString(),
-        "currLong": position?.longitude.toString(),
-        "entry": formattedDate,
-        "exit": formattedDate
-      };
-      //encode Map to JSON
-      String body = json.encode(data);
-      var url = 'https://attandance-server.onrender.com/user/${authToken}';
-      Response response = await http.put(
-        Uri.parse(url),
-        body: body,
-        headers: {"Content-Type": "application/json"},
-      );
-      if (response.statusCode == 200) {
-        var userPutResponse =
-            UserPutLocationResponse.fromJson(json.decode(response.body));
-        if (userPutResponse.status == true) {
-          var userDetails = userPutResponse.data!;
-          putResponseData = userDetails;
-          print(putResponseData?.designation);
-
-          Fluttertoast.showToast(
-              msg: "Punched In Successfully.",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => RootApp(pageIndex: 4)));
-        } else {
-          Fluttertoast.showToast(
-              msg: "${userPutResponse.status} : Please try again",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
-      } else if (response.statusCode != 200) {
-        Fluttertoast.showToast(
-            msg: "${response.statusCode} : Please try again",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
-    } else {
-      Fluttertoast.showToast(
-          msg: "You are Outside of Organisation ! Cannot Punch In. ",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-    }
-  }
-
-  Future _signUp(context) async {
-    DatabaseHelper _databaseHelper = DatabaseHelper.instance;
-    List predictedData = _mlService.predictedData;
-    String user = _userTextEditingController.text;
-    String password = amount.text;
-    User userToSave = User(
-      user: user,
-      password: password,
-      modelData: predictedData,
-    );
-    await _databaseHelper.insert(userToSave);
-    this._mlService.setPredictedData([]);
-    Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) => RootApp(pageIndex: 0,)));
-  }
-
-  Future _signIn(context) async {
-    String password = _passwordTextEditingController.text;
-    if (this.predictedUser!.password == password) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => Profile(
-                    this.predictedUser!.user,
-                    imagePath: _cameraService.imagePath!,
-                  )));
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: Text('Wrong password!'),
-          );
-        },
       );
     }
   }
@@ -312,7 +207,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                     ? AppButton(
                         text: 'LOGIN',
                         onPressed: () async {
-                          _signIn(context);
+                          //_signIn(context);
                         },
                         icon: Icon(
                           Icons.login,
@@ -324,7 +219,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                             text: 'Punch In',
                             onPressed: () {
                               //await _signUp(context);
-                              putLatLong();
+                              ApiCalls().putLatLong(context, position, formattedDate, authToken);
                             },
                             icon: Icon(
                               Icons.person_add,

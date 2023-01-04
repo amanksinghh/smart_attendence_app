@@ -146,36 +146,17 @@ class PunchOutState extends State<PunchOut> {
   }
 
   getLocation() async {
-    setState(() async {
-      position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      print(position?.longitude);
-      print(position?.latitude);
+    LocationPermission permission = await Geolocator.checkPermission();
 
-      long = position?.longitude.toString() ?? "";
-      lat = position?.latitude.toString() ?? "";
-
-      setState(() {
-        //refresh UI
-      });
-
-      LocationSettings locationSettings = LocationSettings(
-        accuracy: LocationAccuracy.high, //accuracy of the location data
-        distanceFilter: 100, //minimum distance (measured in meters) a
-        //device must move horizontally before an update event is generated;
-      );
-
-      StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
-          locationSettings: locationSettings).listen((Position position) {
-        print(position.longitude); //Output: 80.24599079
-        print(position.latitude); //Output: 29.6593457
-
-        long = position.longitude.toString();
-        lat = position.latitude.toString();
-
-        setState(() {
-          //refresh UI on update
-        });
-      });
-    });
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      print("Permission not granted");
+      Geolocator.requestPermission();
+    } else {
+      position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+      print(position!.latitude.toString());
+      print(position!.longitude.toString());
+    }
   }
 }

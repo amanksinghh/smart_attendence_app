@@ -20,9 +20,6 @@ import 'package:timeline_tile/timeline_tile.dart';
 
 import '../utils/service_utilities.dart';
 
-var profile_image =
-    "https://media-exp1.licdn.com/dms/image/C5603AQEob5l8e06qQg/profile-displayphoto-shrink_800_800/0/1652278654609?e=1658361600&v=beta&t=IOrm1Y-2XbJ-wkn8Zy3ZGbcAssPC2gI4jfs4DyShYs4";
-
 class CreatBudgetPage extends StatefulWidget {
   @override
   _CreatBudgetPageState createState() => _CreatBudgetPageState();
@@ -41,7 +38,6 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
   getLoginData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
-    print(authToken);
     getUsers();
     return authToken;
   }
@@ -180,7 +176,7 @@ class _CreatBudgetPageState extends State<CreatBudgetPage> {
                                   width: 85,
                                   height: 85,
                                   child: Center(
-                                    child: Text(userById!.fullName
+                                    child: Text("${userById?.fullName ?? "--"}"
                                         .toString()
                                         .split("")[0][0],style: TextStyle(
                                         fontSize: (size.width - 40) * 0.2,

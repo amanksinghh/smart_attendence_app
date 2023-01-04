@@ -30,7 +30,6 @@ class _ProfilePageState extends State<ProfilePage> {
   getLoginData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
-    print(authToken);
     getUsers();
     return authToken;
   }
@@ -44,8 +43,6 @@ class _ProfilePageState extends State<ProfilePage> {
         var userListResponse = UserByIdResponse.fromJson(json.decode(response.body));
         var userDetails = userListResponse.users;
         userById = userDetails;
-        print("User by ID API called");
-        print(userById?.entry);
       });
 
     }
@@ -157,16 +154,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: Container(
                                   width: 85,
                                   height: 85,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
                                   child: Center(
-                                    child: Text(userById!.fullName
-                                        .toString()
-                                        .split("")[0][0],style: TextStyle(
-                                      fontSize: (size.width - 40) * 0.2,
-                                      color: primary
-                                    ),),
+                                    child: Text(
+                                      "${userById?.fullName ?? "--"}"
+                                          .toString()
+                                          .split("")[0][0],
+                                      style: TextStyle(
+                                          fontSize: (size.width - 40) * 0.2,
+                                          color: primary),
+                                    ),
                                   ),
                                 ),
                               )

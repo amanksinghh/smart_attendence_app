@@ -111,15 +111,15 @@ class LoginPageState extends State<LoginPage>
     //encode Map to JSON
     String body = json.encode(data);
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      ServiceUtils().showLoader(context);
+      showLoader();
       var url = 'https://attandance-server.onrender.com/user/login';
       Response response = await http.post(
          Uri.parse(url),body: body,headers: {
         "Content-Type": "application/json"
       },
       );
+      hideLoader();
       if(response.statusCode == 200){
-        ServiceUtils().hideLoader(context);
         var userLoginResponse = UserLoginResponse.fromJson(json.decode(response.body));
         if(userLoginResponse.status == "SUCCESS")
           {
@@ -161,14 +161,14 @@ class LoginPageState extends State<LoginPage>
         print('Something went wrong!');
       }
      else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Please enter your email and password"),
+      Fluttertoast.showToast(
+          msg: "Please enter your email and password",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
-          duration: Duration(seconds: 2),
-          dismissDirection: DismissDirection.down,
-          elevation: 10,
-        ),
+          textColor: Colors.white,
+          fontSize: 16.0
       );
     }}
   }
@@ -348,6 +348,23 @@ class LoginPageState extends State<LoginPage>
     );
   }
 
+  showLoader() {
+    if (!isDialogShowing) {
+      isDialogShowing = true;
+      showDialog(
+          context: context,
+          barrierColor: Colors.transparent,
+          builder: (BuildContext context) {
+            return const CustomProgressDialog();
+          }).then((value) {
+        isDialogShowing = false;
+      });
+    }
+  }
 
-
+  hideLoader() {
+    if (isDialogShowing) {
+      Navigator.pop(context);
+    }
+  }
 }
