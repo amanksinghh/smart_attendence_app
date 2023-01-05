@@ -143,7 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     radius: 60.0,
                                     lineWidth: 6.0,
                                     percent: 0.7,
-                                    progressColor: primary),
+                                    progressColor: Colors.blue),
                               ),
                               Positioned(
                                 top: 18,
@@ -158,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           .split("")[0][0],
                                       style: TextStyle(
                                           fontSize: (size.width - 40) * 0.2,
-                                          color: primary),
+                                          color: Colors.blue),
                                     ),
                                   ),
                                 ),
@@ -200,7 +200,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                        color: primary,
+                        color: Colors.blue,
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(

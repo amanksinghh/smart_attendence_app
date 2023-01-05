@@ -27,7 +27,7 @@ class _SummaryPageState extends State<SummaryPage> with TickerProviderStateMixin
                     height: 50,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                        color: Colors.white70,
+                        color: Colors.white,
                         boxShadow: kElevationToShadow[4]),
                     child:
                     TabBar(

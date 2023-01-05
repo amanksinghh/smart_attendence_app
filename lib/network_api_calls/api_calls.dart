@@ -18,10 +18,10 @@ class ApiCalls {
 
     if (position?.latitude != null) {
       Map data = {
-        "currLat": position?.latitude.toString(),
-        "currLong": position?.longitude.toString(),
+        //"currLat": position?.latitude.toString(),
+        //"currLong": position?.longitude.toString(),
         "entry": formattedDate,
-        "exit": formattedDate
+        //"exit": formattedDate
       };
       //encode Map to JSON
       String body = json.encode(data);

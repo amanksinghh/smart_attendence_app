@@ -15,53 +15,28 @@ class _EventsCardsState extends State<EventsCards> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-            child: GridView.count(
-              crossAxisCount: 1,
-              mainAxisSpacing: 30,
-              childAspectRatio: 2.3,
-              shrinkWrap: true,
-              primary: false,
-              padding: const EdgeInsets.all(20),
-              children: <Widget>[
-                Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Colors.white, boxShadow: kElevationToShadow[4]),
-                child: ServiceUtils()
-                    .eventsContainer("New Year Bash", "01/02/23", "Tower 2", "1")),
-                Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Colors.white, boxShadow: kElevationToShadow[4]),
-                child: ServiceUtils()
-                    .eventsContainer("Christmas Eve", "25/12/22", "Office Roof", "2")),
-                Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Colors.white, boxShadow: kElevationToShadow[4]),
-                child: ServiceUtils()
-                    .eventsContainer("Tech Fest", "16/12/22", "Seminar Hall", "3")),
-                Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Colors.white, boxShadow: kElevationToShadow[4]),
-                child: ServiceUtils()
-                    .eventsContainer("New Year Bash", "18/01/23", "Farms", "4")),
-                Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Colors.white, boxShadow: kElevationToShadow[4]),
-                child: ServiceUtils()
-                    .eventsContainer("New Year Bash", "18/01/23", "Farms", "5")),
-                Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                    color: Colors.white, boxShadow: kElevationToShadow[4]),
-                child: ServiceUtils()
-                    .eventsContainer("New Year Bash", "18/01/23", "Farms", "6")),
-          ],
-            )),
+        child: GridView.count(
+        crossAxisCount: 1,
+        mainAxisSpacing: 20,
+        childAspectRatio: 2 / 1,
+        shrinkWrap: true,
+        primary: false,
+        padding: const EdgeInsets.all(20),
+        children: <Widget>[
+          ServiceUtils()
+              .eventsContainer("New Year Bash", "01/02/23", "Tower 2", "1"),
+          ServiceUtils().eventsContainer(
+              "Christmas Eve", "25/12/22", "Office Roof", "2"),
+          ServiceUtils()
+              .eventsContainer("Tech Fest", "16/12/22", "Seminar Hall", "3"),
+          ServiceUtils()
+              .eventsContainer("New Year Bash", "18/01/23", "Farms", "4"),
+          ServiceUtils()
+              .eventsContainer("New Year Bash", "18/01/23", "Farms", "5"),
+          ServiceUtils()
+              .eventsContainer("New Year Bash", "18/01/23", "Farms", "6"),
+        ],
+          ),
       ),
     );
   }

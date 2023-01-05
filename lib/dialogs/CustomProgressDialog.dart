@@ -17,7 +17,7 @@ class _ProgressDialogState extends State<CustomProgressDialog> {
       height: MediaQuery.of(context).size.height,
       width: 50.0,
       alignment: Alignment.center,
-      child: CircularProgressIndicator(color: Colors.orange),
+      child: CircularProgressIndicator(color: Colors.blue),
     );
   }
 }

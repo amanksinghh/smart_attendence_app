@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api_models/user_put_location_response.dart';
 import '../api_models/user_response.dart';
+import '../dialogs/CustomProgressDialog.dart';
 
 class PunchOut extends StatefulWidget {
   const PunchOut({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class PunchOutState extends State<PunchOut> {
   String? formattedDate;
   String? formattedTime;
   DateTime? date;
+  bool isDialogShowing = false;
   late LocationPermission permission;
   Position? position;
   String long = "", lat = "";
@@ -38,10 +40,11 @@ class PunchOutState extends State<PunchOut> {
   }
 
   Future<void> putLatLong() async {
+    showLoader(context);
     Map data = {
-      "currLat": position?.latitude.toString(),
-      "currLong": position?.longitude.toString(),
-      "entry": formattedTime,
+      // "currLat": position?.latitude.toString(),
+      // "currLong": position?.longitude.toString(),
+      // "entry": formattedTime,
       "exit": formattedTime
     };
     //encode Map to JSON
@@ -52,6 +55,7 @@ class PunchOutState extends State<PunchOut> {
       body: body,
       headers: {"Content-Type": "application/json"},
     );
+    hideLoader(context);
     if (response.statusCode == 200) {
       var userPutResponse =
           UserPutLocationResponse.fromJson(json.decode(response.body));
@@ -97,7 +101,7 @@ class PunchOutState extends State<PunchOut> {
     getLoginData();
     setState(() {
       date = DateTime.now();
-      formattedTime = DateFormat.Hm().format(date!);
+      formattedTime = DateFormat.jm().format(date!);
       formattedDate = DateFormat.MMMd().format(date!);
       getLocation();
     });
@@ -137,4 +141,25 @@ class PunchOutState extends State<PunchOut> {
       print(position!.longitude.toString());
     }
   }
+
+  showLoader(BuildContext context) {
+    if (!isDialogShowing) {
+      isDialogShowing = true;
+      showDialog(
+          context: context,
+          barrierColor: Colors.transparent,
+          builder: (BuildContext context) {
+            return const CustomProgressDialog();
+          }).then((value) {
+        isDialogShowing = false;
+      });
+    }
+  }
+
+  hideLoader(BuildContext context) {
+    if (isDialogShowing) {
+      Navigator.pop(context);
+    }
+  }
+
 }

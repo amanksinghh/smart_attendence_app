@@ -78,7 +78,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
       getUsers();
       _lastButtonPress = DateTime.now();
       _updateTimer();
-      _ticker = Timer.periodic(Duration(seconds: 1), (_) => _updateTimer());
+      _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _updateTimer());
     });
   }
 
@@ -112,7 +112,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: const [
                       Text(
                         "My Feed",
                         style: TextStyle(
@@ -138,12 +138,11 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                 // changes position of shadow
               ),
             ]),
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 5, right: 20, left: 20, bottom: 5),
-              child: Column(
-                children: [
-                  Row(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20,right: 20),
+                  child: Row(
                     children: [
                       Container(
                         width: (size.width - 40) * 0.4,
@@ -158,7 +157,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                                     radius: 60.0,
                                     lineWidth: 4.0,
                                     percent: 0.8,
-                                    progressColor: black),
+                                    progressColor: Colors.blue),
                               ),
                               Positioned(
                                 top: 18,
@@ -173,7 +172,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                                           .split("")[0][0],
                                       style: TextStyle(
                                           fontSize: (size.width - 40) * 0.2,
-                                          color: primary),
+                                          color: Colors.blue),
                                     ),
                                   ),
                                 ),
@@ -189,12 +188,12 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                           children: [
                             Text(
                               userById?.fullName ?? "",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: black),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Text(
@@ -204,7 +203,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                                   fontWeight: FontWeight.w500,
                                   color: black.withOpacity(0.4)),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 15,
                             ),
                             Text(
@@ -219,24 +218,28 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                       )
                     ],
                   ),
-                  SizedBox(
-                    height: 33,
-                  ),
-                  Container(
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
+                  child: Container(
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                        color: grey.withOpacity(0.01),
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: grey.withOpacity(0.3),
+                            color: primary.withOpacity(0.01),
                             spreadRadius: 10,
                             blurRadius: 3,
                             // changes position of shadow
-                          ),
+                          )
                         ]),
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 2, right: 2, top: 25, bottom: 25),
+                          left: 15, right: 15, top: 20,bottom: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -245,32 +248,32 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                             children: [
                               Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.arrow_downward_outlined,
-                                    color: black,
+                                    color: white,
                                     size: 25,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 5,
                                   ),
                                   Text(
                                     userById?.entry ?? "",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 16,
-                                        color: Colors.green),
+                                        color: Colors.white),
                                   ),
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
-                              Text(
+                              const Text(
                                 "Punched In",
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
-                                    color: black),
+                                    color: white),
                               ),
                             ],
                           ),
@@ -279,32 +282,32 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                             children: [
                               Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.punch_clock_rounded,
-                                    color: primary,
+                                    color: white,
                                     size: 25,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 2,
                                   ),
                                   Text(
                                     _pressDuration ?? "00:00:00",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 20,
-                                        color: blue),
+                                        color: white),
                                   ),
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
-                              Text(
+                              const Text(
                                 "WORKING HOUR ",
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
-                                    color: black),
+                                    color: white),
                               ),
                             ],
                           ),
@@ -313,44 +316,44 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                             children: [
                               Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.arrow_upward_rounded,
-                                    color: black,
+                                    color: white,
                                     size: 25,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 5,
                                   ),
                                   Text(
                                     userById?.exit ?? "",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 16,
-                                        color: Colors.red),
+                                        color: white),
                                   ),
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
-                              Text(
+                              const Text(
                                 "Punched Out",
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 15,
-                                    color: black),
+                                    color: white),
                               ),
                             ],
                           ),
                         ],
                       ),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           Container(
@@ -367,10 +370,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                       checkIpAddress();
                       break;
                     case 1:
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const CountUpTimer()));
+                      demoToast();
                       break;
 
                     case 2:
@@ -387,7 +387,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                     left: 5,
                   ),
                   child: Container(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                       left: 5,
                     ),
                     width: (size.width - 40) / categories.length,
@@ -397,17 +397,10 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                         border: Border.all(
                             width: 2,
                             color: activeCategory == index
-                                ? primary
-                                : Color.fromARGB(144, 97, 94, 94)),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: grey.withOpacity(0.3),
-                            spreadRadius: 10,
-                            blurRadius: 3,
-                            // changes position of shadow
-                          ),
-                        ]),
+                                ? Colors.blue
+                                : const Color.fromARGB(144, 97, 94, 94)),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: kElevationToShadow[5]),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 10, right: 10, top: 20, bottom: 20),
@@ -436,7 +429,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                           ),
                           Text(
                             categories[index]['name'],
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                             ),
@@ -449,7 +442,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
               );
             })),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Container(
@@ -468,7 +461,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: const [
                       Text(
                         "TIMELINE",
                         style: TextStyle(
@@ -476,17 +469,11 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                             fontWeight: FontWeight.bold,
                             color: black),
                       ),
-                      // Row(
-                      //   children: [Icon(Icons.search)],
-                      // )
                     ],
                   ),
                 ],
               ),
             ),
-          ),
-          SizedBox(
-            height: 10,
           ),
         ],
       ),
@@ -524,7 +511,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
     String checkIpv6 = "2409:4041:261e:e71a:7d43:d18:7e36:a6c0";
     if (ipv6 == checkIpv6) {
       hideLoader(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Connected to Organization Wifi."),
         backgroundColor: Colors.green,
       ));
@@ -533,11 +520,18 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
           .whenComplete(() => {functionThatStartsTimer()});
     } else {
       hideLoader(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Please Connect to Organization Wifi."),
         backgroundColor: Colors.red,
       ));
     }
+  }
+
+  demoToast() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Updating Soon !"),
+      backgroundColor: Colors.red,
+    ));
   }
 
   showLoader(BuildContext context) {

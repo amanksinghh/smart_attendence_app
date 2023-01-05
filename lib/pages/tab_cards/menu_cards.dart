@@ -17,7 +17,7 @@ class _MenuCardsState extends State<MenuCards> {
         child: GridView.count(
           crossAxisCount: 1,
           mainAxisSpacing: 15,
-          childAspectRatio: 7,
+          childAspectRatio: 4/1,
           shrinkWrap: true,
           primary: false,
           padding: const EdgeInsets.all(10),

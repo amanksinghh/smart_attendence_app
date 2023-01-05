@@ -79,9 +79,9 @@ class _RootAppState extends State<RootApp> {
       Icons.person_sharp,
     ];
     return AnimatedBottomNavigationBar(
-      activeColor: primary,
-      splashColor: secondary,
-      inactiveColor: Color.fromARGB(255, 70, 31, 0).withOpacity(0.9),
+      activeColor: Colors.blue,
+      splashColor: Colors.blue,
+      inactiveColor: Colors.black87,
       icons: iconItems,
       activeIndex: pageIndex,
       gapLocation: GapLocation.center,

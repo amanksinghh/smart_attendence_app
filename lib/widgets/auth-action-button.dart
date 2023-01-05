@@ -108,7 +108,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         setState(
           () {
             date = DateTime.now();
-            formattedDate = DateFormat.Hm().format(date!);
+            formattedDate = DateFormat.jm().format(date!);
             amount.text = '$date';
             getLocation();
             getLoginData();

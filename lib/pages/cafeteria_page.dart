@@ -25,7 +25,7 @@ class _CafeteriaPageState extends State<CafeteriaPage> with TickerProviderStateM
                     height: 50,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                        color: Colors.white60,
+                        color: Colors.white,
                         boxShadow: kElevationToShadow[4]),
                     child:
                     TabBar(
@@ -62,7 +62,7 @@ class _CafeteriaPageState extends State<CafeteriaPage> with TickerProviderStateM
                     ),
                   ),
                   const SizedBox(
-                    height: 12,
+                    height: 10,
                   ),
                   Expanded(
                     child: TabBarView(

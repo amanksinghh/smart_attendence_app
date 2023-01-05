@@ -41,79 +41,84 @@ class ServiceUtils {
       String details,
       String amount
       ){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Your Expenses",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),),
-        const SizedBox(
-          height: 20,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                    text: "Time - ",
-                    style: TextStyle(fontSize: 14,color: Colors.blue)
-                ),
-                TextSpan(
-                  text: time,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                    text: "Date - ",
-                    style: TextStyle(fontSize: 14,color: Colors.blue)
-                ),
-                TextSpan(
-                  text: date,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                    text: "Details - ",
-                    style: TextStyle(fontSize: 14,color: Colors.blue)),
-                TextSpan(
-                  text: details,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                    text: "Amount - ",
-                    style: TextStyle(fontSize: 14,color: Colors.blue)
-                ),
-                TextSpan(
-                  text: "Rs. $amount",
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: Colors.white, boxShadow: kElevationToShadow[4]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Your Expenses",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),),
+          const SizedBox(
+            height: 20,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Time - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)
+                  ),
+                  TextSpan(
+                    text: time,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Date - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)
+                  ),
+                  TextSpan(
+                    text: date,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Details - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)),
+                  TextSpan(
+                    text: details,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Amount - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)
+                  ),
+                  TextSpan(
+                    text: "Rs. $amount",
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
 
-      ],
+        ],
+      ),
     );
   }
 
@@ -140,161 +145,191 @@ class ServiceUtils {
       String venue,
       String bookingID
       ){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Events",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),),
-        const SizedBox(
-          height: 20,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                    text: "Name - ",
-                    style: TextStyle(fontSize: 14,color: Colors.blue)
-                ),
-                TextSpan(
-                  text: name,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                    text: "Date - ",
-                    style: TextStyle(fontSize: 14,color: Colors.blue)
-                ),
-                TextSpan(
-                  text: date,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                    text: "Venue - ",
-                    style: TextStyle(fontSize: 14,color: Colors.blue)),
-                TextSpan(
-                  text: venue,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                    text: "Booking ID - ",
-                    style: TextStyle(fontSize: 14,color: Colors.blue)
-                ),
-                TextSpan(
-                  text: bookingID,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: Colors.white, boxShadow: kElevationToShadow[4]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Events",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),),
+          const SizedBox(
+            height: 20,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Name - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)
+                  ),
+                  TextSpan(
+                    text: name,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Date - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)
+                  ),
+                  TextSpan(
+                    text: date,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Venue - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)),
+                  TextSpan(
+                    text: venue,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Booking ID - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)
+                  ),
+                  TextSpan(
+                    text: bookingID,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
 
-      ],
+        ],
+      ),
     );
   }
 
   leavesContainer(
+      BuildContext context,
       String fromDate,
       String toDate,
       String reason,
-      String leaveType
+      String leaveType,
+      String status,
+      bool approved
       ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Leave Application",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),),
-        const SizedBox(
-          height: 20,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                  text: "From - ",
-                  style: TextStyle(fontSize: 14,color: Colors.blue)
-                ),
-                TextSpan(
-                  text: fromDate,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                  text: "To - ",
-                  style: TextStyle(fontSize: 14,color: Colors.blue)
-        ),
-                TextSpan(
-                  text: toDate,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                    text: "Reason - ",
-                    style: TextStyle(fontSize: 14,color: Colors.blue)),
-                TextSpan(
-                  text: reason,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        RichText(
-          text: TextSpan(
-              children: <TextSpan>[
-                const TextSpan(
-                    text: "Leave - ",
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: Colors.white, boxShadow: kElevationToShadow[4]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Leave Application",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),),
+          const SizedBox(
+            height: 20,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: "From - ",
                     style: TextStyle(fontSize: 14,color: Colors.blue)
-                ),
-                TextSpan(
-                  text: leaveType,
-                  style: const TextStyle(color: Colors.black87),
-                )
-              ]),
-        ),
-
-      ],
+                  ),
+                  TextSpan(
+                    text: fromDate,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: "To - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)
+          ),
+                  TextSpan(
+                    text: toDate,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Reason - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)),
+                  TextSpan(
+                    text: reason,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Type - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)
+                  ),
+                  TextSpan(
+                    text: leaveType,
+                    style: const TextStyle(color: Colors.black87),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          RichText(
+            text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(
+                      text: "Status - ",
+                      style: TextStyle(fontSize: 14,color: Colors.blue)
+                  ),
+                  TextSpan(
+                   text: status,
+                    style:
+                    TextStyle(color: approved ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.bold),
+              )
+            ]),
+          ),
+        ],
+      ),
     );
   }
 
