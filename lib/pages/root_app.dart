@@ -74,7 +74,7 @@ class _RootAppState extends State<RootApp> {
   Widget getFooter() {
     List<IconData> iconItems = [
       Icons.dashboard_sharp,
-      Icons.stacked_bar_chart_sharp,
+      Icons.local_cafe,
       Icons.wallet_travel_sharp,
       Icons.person_sharp,
     ];

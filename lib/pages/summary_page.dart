@@ -72,7 +72,6 @@ class _SummaryPageState extends State<SummaryPage> with TickerProviderStateMixin
                       ],
                     ),
                   ),
-
                 ])
         )
     );

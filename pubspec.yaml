@@ -68,6 +68,7 @@ dependencies:
   dart_ipify: ^1.1.1
   flutter_svg: ^1.1.6
   tflite_flutter: ^0.9.0
+  syncfusion_flutter_charts: ^20.4.42
 
 dev_dependencies:
   flutter_test:
