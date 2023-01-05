@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
               await getUsers();
             },
             child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   Container(
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 "Attendence Summary",
                                 style: TextStyle(
                                     fontSize: 20,
@@ -148,21 +148,17 @@ class _HomePageState extends State<HomePage> {
                                   }
                                 },
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 0),
+                                  padding: const EdgeInsets.only(left: 0),
                                   child: Row(
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/icons/ic_calenderblue.svg',
-                                        fit: BoxFit.fill,
-                                        height: 20,
-                                        width: 20,
-                                      ),
+                                      const Icon(Icons.calendar_month,
+                                      color: Colors.blue,),
                                       const SizedBox(
                                         width: 10,
                                       ),
                                       Text(
                                         "$formattedDated",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 17, color: Colors.blue),
                                       ),
                                     ],
@@ -171,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Row(
@@ -191,9 +187,9 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         Text(
                                           days[index]['label'],
-                                          style: TextStyle(fontSize: 10),
+                                          style: const TextStyle(fontSize: 10),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 10,
                                         ),
                                         Container(
@@ -230,13 +226,13 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Padding(
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Container(
-                        margin: EdgeInsets.only(left: 6, right: 6),
+                        margin: const EdgeInsets.only(left: 6, right: 6),
                         height: 150,
                         decoration: const BoxDecoration(
                           color: Colors.white,
@@ -256,15 +252,15 @@ class _HomePageState extends State<HomePage> {
                             Expanded(
                               child: Container(
                                 margin: const EdgeInsets.only(),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: const BorderRadius.all(
+                                decoration: const BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.all(
                                       Radius.circular(20)),
                                 ),
                                 child: Center(
                                   child: Text(
                                     formattedDate.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: "NexaBold",
                                       fontSize: 18,
                                       color: Colors.white,
@@ -278,7 +274,7 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Punch In",
                                     style: TextStyle(
                                       fontFamily: "NexaRegular",
@@ -288,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   Text(
                                     userById?.entry ?? "--/--",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: "NexaBold",
                                       fontSize: 18,
                                     ),
@@ -301,7 +297,7 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Punch Out",
                                     style: TextStyle(
                                       fontFamily: "NexaRegular",
@@ -311,7 +307,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   Text(
                                     userById?.exit ?? "--/--",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: "NexaBold",
                                       fontSize: 18,
                                     ),

@@ -235,7 +235,8 @@ class LoginPageState extends State<LoginPage>
                     Container(
                       padding: const EdgeInsets.all(25.0),
                       // ignore: unnecessary_new
-                      child: new Form(
+                      child: new
+                      Form(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[

@@ -12,7 +12,7 @@ class ServiceUtils {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         msg,
-        style: TextStyle(fontSize: 16, color: Colors.white),
+        style: const TextStyle(fontSize: 16, color: Colors.white),
       ),
       backgroundColor: Colors.grey.shade600,
       elevation: 0,
@@ -27,12 +27,275 @@ class ServiceUtils {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         msg,
-        style: TextStyle(fontSize: 16, color: Colors.white),
+        style: const TextStyle(fontSize: 16, color: Colors.white),
       ),
       backgroundColor: Colors.black,
       elevation: 0,
       duration: const Duration(seconds: 3),
     ));
+  }
+
+  expenseContainer(
+      String time,
+      String date,
+      String details,
+      String amount
+      ){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Your Expenses",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),),
+        const SizedBox(
+          height: 20,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                    text: "Time - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)
+                ),
+                TextSpan(
+                  text: time,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                    text: "Date - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)
+                ),
+                TextSpan(
+                  text: date,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                    text: "Details - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)),
+                TextSpan(
+                  text: details,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                    text: "Amount - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)
+                ),
+                TextSpan(
+                  text: "Rs. $amount",
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+
+      ],
+    );
+  }
+
+  menuItems(String itemId, String itemName, String itemPrice) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(itemId,
+            style: const TextStyle(fontSize: 20, color: Colors.black87,)),
+        Text(itemName,
+            style: const TextStyle(fontSize: 20, color: Colors.black87)),
+        Text(
+          itemPrice,
+          style: const TextStyle(fontSize: 20, color: Colors.black87),
+        )
+      ],
+    );
+  }
+
+  eventsContainer(
+      String name,
+      String date,
+      String venue,
+      String bookingID
+      ){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Events",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),),
+        const SizedBox(
+          height: 20,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                    text: "Name - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)
+                ),
+                TextSpan(
+                  text: name,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                    text: "Date - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)
+                ),
+                TextSpan(
+                  text: date,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                    text: "Venue - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)),
+                TextSpan(
+                  text: venue,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                    text: "Booking ID - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)
+                ),
+                TextSpan(
+                  text: bookingID,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+
+      ],
+    );
+  }
+
+  leavesContainer(
+      String fromDate,
+      String toDate,
+      String reason,
+      String leaveType
+      ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Leave Application",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),),
+        const SizedBox(
+          height: 20,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                  text: "From - ",
+                  style: TextStyle(fontSize: 14,color: Colors.blue)
+                ),
+                TextSpan(
+                  text: fromDate,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                  text: "To - ",
+                  style: TextStyle(fontSize: 14,color: Colors.blue)
+        ),
+                TextSpan(
+                  text: toDate,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                    text: "Reason - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)),
+                TextSpan(
+                  text: reason,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        RichText(
+          text: TextSpan(
+              children: <TextSpan>[
+                const TextSpan(
+                    text: "Leave - ",
+                    style: TextStyle(fontSize: 14,color: Colors.blue)
+                ),
+                TextSpan(
+                  text: leaveType,
+                  style: const TextStyle(color: Colors.black87),
+                )
+              ]),
+        ),
+
+      ],
+    );
   }
 
   showLoader(BuildContext context) {
@@ -60,12 +323,12 @@ class ServiceUtils {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(
+            title: const Text(
               "Logout",
               style: TextStyle(fontSize: 16, color: Colors.black),
             ),
             // To display the title it is optional
-            content: Text(
+            content: const Text(
               "Are you sure",
               style: TextStyle(fontSize: 14, color: Colors.black),
             ),
@@ -78,7 +341,7 @@ class ServiceUtils {
                   Navigator.pop(context);
                 },
                 // function used to perform after pressing the button
-                child: Text(
+                child: const Text(
                   "No",
                   style: TextStyle(fontSize: 14, color: Colors.blue),
                 ),
@@ -88,7 +351,7 @@ class ServiceUtils {
                   Navigator.pop(context);
                   onLogout();
                 },
-                child: Text(
+                child: const Text(
                   "Yes",
                   style: TextStyle(fontSize: 14, color: Colors.blue),
                 ),

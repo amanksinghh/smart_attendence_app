@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:smart_attendence_app/pages/homepage/homepage.dart';
 
 import '../theme/colors.dart';
-import 'budget_page.dart';
-import 'create_budge_page.dart';
+import 'summary_page.dart';
+import 'my_feeds.dart';
 import 'profile_page.dart';
-import 'stats_page.dart';
+import 'cafeteria_page.dart';
 
 class RootApp extends StatefulWidget {
   final int pageIndex;
@@ -25,10 +25,10 @@ class _RootAppState extends State<RootApp> {
   List<Widget> pages = [
     // DailyPage(),
     HomePage(),
-    StatsPage(),
-    BudgetPage(),
+    CafeteriaPage(),
+    SummaryPage(),
     ProfilePage(),
-    CreatBudgetPage()
+    MyFeedsPage()
   ];
 
   @override
