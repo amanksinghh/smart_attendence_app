@@ -96,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Profile",
                         style: TextStyle(
                             fontSize: 20,
@@ -105,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       InkWell(
                         onTap: () {
-                          ServiceUtils().showLogoutPopup(context, () async {
+                          ServiceUtils().showSignOutPopup(context, () async {
                             logOut();
                             Navigator.pushAndRemoveUntil<dynamic>(
                               context,
@@ -116,16 +116,20 @@ class _ProfilePageState extends State<ProfilePage> {
                             );
                           });
                         },
-                        child: SvgPicture.asset(
-                          'assets/icons/logout_icon.svg',
-                          fit: BoxFit.fill,
-                          height: 25,
-                          width: 25,
-                        ),
+                        child: const Text("SignOut",style: TextStyle(
+                          fontSize: 16,color: Colors.blue,
+                          fontWeight: FontWeight.bold
+                        ),),
+                        // child: SvgPicture.asset(
+                        //   'assets/icons/logout_icon.svg',
+                        //   fit: BoxFit.fill,
+                        //   height: 25,
+                        //   width: 25,
+                        // ),
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 25,
                   ),
                   Row(
@@ -174,12 +178,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Text(
                               userById?.fullName ?? "Employee name",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: black),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Text(
@@ -194,7 +198,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Container(
@@ -219,19 +223,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 "Emp ID : 2456",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
                                     color: white),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 15,
                               ),
                               Text(
                                 userById?.designation ?? "Employee designation",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
                                     color: white),
@@ -246,7 +250,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
@@ -254,39 +258,39 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "Email",
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
                       color: Color(0xff67727d)),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   userById?.email ?? "Employee email",
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
                       color: Color.fromARGB(255, 0, 0, 0)),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                Text(
+                const Text(
                   "Date of birth",
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
                       color: Color(0xff67727d)),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   userById?.dateOfBirth ?? "Employee DOB",
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
                       color: Color.fromARGB(255, 0, 0, 0)),

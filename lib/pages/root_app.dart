@@ -52,12 +52,12 @@ class _RootAppState extends State<RootApp> {
             onPressed: () {
               selectedTab(4);
             },
+            backgroundColor: Color.fromARGB(255, 252, 250, 251),
             child: Image(
               image: AssetImage("assets/images/logo.png"),
               width: 50,
               height: 40,
-            ),
-            backgroundColor: Color.fromARGB(255, 252, 250, 251)
+            )
             //params
             ),
         floatingActionButtonLocation:

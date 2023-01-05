@@ -353,18 +353,18 @@ class ServiceUtils {
     }
   }
 
-  showLogoutPopup(BuildContext context, Function onLogout) {
+  showSignOutPopup(BuildContext context, Function onLogout) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text(
-              "Logout",
+              "Sign Out",
               style: TextStyle(fontSize: 16, color: Colors.black),
             ),
             // To display the title it is optional
             content: const Text(
-              "Are you sure",
+              "Are you sure ?",
               style: TextStyle(fontSize: 14, color: Colors.black),
             ),
             // Message which will be pop up on the screen
