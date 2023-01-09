@@ -8,8 +8,7 @@ import 'package:http/http.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/face_auth_puch/punch_out.dart';
-
-import '../api_models/user_by_id_response.dart';
+import '../api_models/responses/user_by_id_response.dart';
 import '../dialogs/CustomProgressDialog.dart';
 import '../face_auth_puch/punch_in.dart';
 import '../json/create_budget_json.dart';
@@ -29,6 +28,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
   String? authToken;
 
   Users? userById;
+  Userdetails? _userdetails;
 
   bool isPunchedIn = false;
 
@@ -40,14 +40,17 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
   }
 
   Future<void> getUsers() async {
-    var url = 'https://attandance-server.onrender.com/user/${authToken}';
-    Response response = await http.get(Uri.parse(url));
+    var url = 'https://attandance-server.onrender.com/user';
+    Response response = await http.get(Uri.parse(url),headers: {
+      'Authorization': 'Bearer $authToken',
+    });
     if (response.statusCode == 200) {
       setState(() {
         var userListResponse =
             UserByIdResponse.fromJson(json.decode(response.body));
         var userDetails = userListResponse.users;
         userById = userDetails;
+        _userdetails = userById?.userdetails?.first;
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -72,13 +75,13 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
     setState(() {
       getUsers();
       _ticker.cancel();
+      isPunchedIn = false;
     });
-    //isPunchedIn = false;
   }
 
   functionThatStartsTimer() {
     setState(() {
-      isPunchedIn == true;
+      isPunchedIn = true;
       getUsers();
       _lastButtonPress = DateTime.now();
       _updateTimer();
@@ -161,7 +164,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                                     backgroundColor: grey.withOpacity(0.5),
                                     radius: 60.0,
                                     lineWidth: 4.0,
-                                    percent: 0.8,
+                                    percent: 1,
                                     progressColor: Colors.blue),
                               ),
                               Positioned(
@@ -170,16 +173,11 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                                 child: Container(
                                   width: 85,
                                   height: 85,
-                                  child: Center(
-                                    child: Text(
-                                      "${userById?.fullName ?? "--"}"
-                                          .toString()
-                                          .split("")[0][0],
-                                      style: TextStyle(
-                                          fontSize: (size.width - 40) * 0.2,
-                                          color: Colors.blue),
-                                    ),
-                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          image: NetworkImage("${userById?.userPhoto}"),
+                                          fit: BoxFit.cover)),
                                 ),
                               )
                             ],
@@ -192,7 +190,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              userById?.fullName ?? "",
+                              userById?.fullName!.firstName ?? "",
                               style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -202,7 +200,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                               height: 10,
                             ),
                             Text(
-                              userById?.org ?? "",
+                              _userdetails?.org ?? "--",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -212,7 +210,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                               height: 15,
                             ),
                             Text(
-                              userById?.designation ?? "",
+                              _userdetails?.designation ?? "--",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,

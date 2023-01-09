@@ -23,7 +23,6 @@ class PunchOut extends StatefulWidget {
 
 class PunchOutState extends State<PunchOut> {
   Users? userById;
-  Data? putResponseData;
   String? formattedDate;
   String? formattedTime;
   DateTime? date;
@@ -48,28 +47,40 @@ class PunchOutState extends State<PunchOut> {
     };
     //encode Map to JSON
     String body = json.encode(data);
-    var url = 'https://attandance-server.onrender.com/user/$authToken';
+    var url = 'https://attandance-server.onrender.com/user';
     Response response = await http.put(
       Uri.parse(url),
       body: body,
-      headers: {"Content-Type": "application/json"},
+      headers: {"Content-Type": "application/json",
+        'Authorization': 'Bearer $authToken'},
     );
     hideLoader(context);
     if (response.statusCode == 200) {
       var userPutResponse =
           UserPutLocationResponse.fromJson(json.decode(response.body));
-        var userDetails = userPutResponse.data!;
-        putResponseData = userDetails;
-        print(putResponseData?.designation);
-        Fluttertoast.showToast(
-            msg: "Punched Out Successfully.",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-            fontSize: 16.0);
-        Navigator.pop(context);
+        bool? success = userPutResponse.status;
+        print(success);
+        if(success == true){
+          Fluttertoast.showToast(
+              msg: "Punched Out Successfully.",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          Navigator.pop(context);
+        }
+        else{
+          Fluttertoast.showToast(
+              msg: "Please try again !",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
 
     } else {
       Fluttertoast.showToast(

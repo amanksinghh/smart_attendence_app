@@ -122,17 +122,17 @@ class ServiceUtils {
     );
   }
 
-  menuItems(String itemId, String itemName, String itemPrice) {
+  menuItems(int itemId, String itemName, String itemPrice) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(itemId,
+        Text(itemId.toString(),
             style: const TextStyle(fontSize: 20, color: Colors.black87,)),
         Text(itemName,
             style: const TextStyle(fontSize: 20, color: Colors.black87)),
         Text(
-          itemPrice,
+          "Rs. $itemPrice ",
           style: const TextStyle(fontSize: 20, color: Colors.black87),
         )
       ],

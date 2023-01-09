@@ -1,25 +1,22 @@
-class UserPutLocationResponse {
-  bool? status;
-  Data? data;
+class UserByIdResponse {
+  Users? users;
 
-  UserPutLocationResponse({this.status, this.data});
+  UserByIdResponse({this.users});
 
-  UserPutLocationResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+  UserByIdResponse.fromJson(Map<String, dynamic> json) {
+    users = json['users'] != null ? new Users.fromJson(json['users']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['status'] = this.status;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.users != null) {
+      data['users'] = this.users!.toJson();
     }
     return data;
   }
 }
 
-class Data {
+class Users {
   FullName? fullName;
   String? role;
   String? sId;
@@ -35,12 +32,12 @@ class Data {
   String? updatedAt;
   int? iV;
   String? userPhoto;
-  Null? currLat;
-  Null? currLong;
-  Null? entry;
+  String? currLat;
+  String? currLong;
+  String? entry;
   String? exit;
 
-  Data(
+  Users(
       {this.fullName,
         this.role,
         this.sId,
@@ -61,9 +58,9 @@ class Data {
         this.entry,
         this.exit});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  Users.fromJson(Map<String, dynamic> json) {
     fullName = json['fullName'] != null
-        ? FullName.fromJson(json['fullName'])
+        ? new FullName.fromJson(json['fullName'])
         : null;
     role = json['role'];
     sId = json['_id'];
@@ -73,7 +70,7 @@ class Data {
     if (json['userdetails'] != null) {
       userdetails = <Userdetails>[];
       json['userdetails'].forEach((v) {
-        userdetails!.add(Userdetails.fromJson(v));
+        userdetails!.add(new Userdetails.fromJson(v));
       });
     }
     password = json['password'];
@@ -87,7 +84,7 @@ class Data {
     if (json['logs'] != null) {
       logs = <Logs>[];
       json['logs'].forEach((v) {
-        logs!.add(Logs.fromJson(v));
+        logs!.add(new Logs.fromJson(v));
       });
     }
     createdAt = json['createdAt'];
@@ -101,7 +98,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.fullName != null) {
       data['fullName'] = this.fullName!.toJson();
     }
@@ -147,7 +144,7 @@ class FullName {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['firstName'] = this.firstName;
     data['middleName'] = this.middleName;
     data['lastName'] = this.lastName;
@@ -174,7 +171,7 @@ class Userdetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['phone'] = this.phone;
     data['_id'] = this.sId;
     data['org'] = this.org;
@@ -198,7 +195,7 @@ class Logs {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     data['date'] = this.date;
     data['workingHours'] = this.workingHours;

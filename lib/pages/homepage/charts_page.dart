@@ -1,22 +1,20 @@
 
 import 'package:flutter/material.dart';
+import 'package:smart_attendence_app/api_models/responses/user_by_id_response.dart';
+import 'package:smart_attendence_app/theme/colors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ChartsPage extends StatefulWidget {
-  const ChartsPage({Key? key}) : super(key: key);
+
+  List<Logs> graphData;
+  ChartsPage({Key? key, required this.graphData}) : super(key: key);
+
 
   @override
   State<ChartsPage> createState() => _ChartsPageState();
 }
 
 class _ChartsPageState extends State<ChartsPage> {
-  List<AttendanceData> data = [
-    AttendanceData('Mon', 6),
-    AttendanceData('Tues', 9),
-    AttendanceData('Wed', 8),
-    AttendanceData('Thur', 10),
-    AttendanceData('Fri', 6)
-  ];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +24,9 @@ class _ChartsPageState extends State<ChartsPage> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             boxShadow: kElevationToShadow[4]),
-        child: SfCartesianChart(
+
+        child: widget.graphData.isNotEmpty
+            ? SfCartesianChart(
             plotAreaBorderWidth: 0,
             enableAxisAnimation: true,
             primaryXAxis: CategoryAxis(
@@ -45,15 +45,17 @@ class _ChartsPageState extends State<ChartsPage> {
                 ),
             series: <ChartSeries>[
               // Renders spline chart
-              SplineAreaSeries<AttendanceData, String>(
+              SplineAreaSeries<Logs, String>(
                   //splineType: SplineType.clamped,
                   color: Colors.blue,
                   //width: 3,
                   legendItemText: "Attendance Data",
                   opacity: 0.4,
-                  dataSource: data,
-                  xValueMapper: (AttendanceData data, _) => data.days,
-                  yValueMapper: (AttendanceData data, _) => data.hours,
+                  dataSource: widget.graphData,
+                  xValueMapper: (Logs data, _) => data.date
+                            ?.replaceAll("/2023", "")
+                            .replaceAll("/2022", ""),
+                        yValueMapper: (Logs data, _) => data.workingHours,
                   // to display label use below code
                   dataLabelSettings: const DataLabelSettings(
                     // Renders the data label
@@ -62,13 +64,15 @@ class _ChartsPageState extends State<ChartsPage> {
                     useSeriesColor: true,
                   ),
                   markerSettings: const MarkerSettings(isVisible: true))
-            ]));
+            ])
+            : const Center(
+                child: Text(
+                  "No Data Available",
+                  style: TextStyle(color: grey),
+                ),
+              ));
   }
 }
 
-class AttendanceData {
-  AttendanceData(this.days, this.hours);
 
-  final String days;
-  final double hours;
-}
+

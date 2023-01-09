@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/network_api_calls/api_calls.dart';
 
-import '../api_models/user_by_id_response.dart';
+import '../api_models/responses/user_by_id_response.dart';
 import '../api_models/user_put_location_response.dart';
 import '../db/user.model.dart';
 import '../services/camera.service.dart';

@@ -8,8 +8,7 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../api_models/user_login.dart';
+import 'package:smart_attendence_app/api_models/responses/user_login_response.dart';
 import '../../dialogs/CustomProgressDialog.dart';
 import '../root_app.dart';
 
@@ -43,8 +42,8 @@ class LoginPageState extends State<LoginPage>
   String authorized = " Not authorized";
   bool _canCheckBiometric = false;
   late List<BiometricType> _availableBiometric;
-  List<Data>? userData;
-  late Data _data;
+  //late Data _data;
+  late User _users;
 
   Future<void> _authenticate() async {
     bool authenticated = false;
@@ -122,14 +121,16 @@ class LoginPageState extends State<LoginPage>
       hideLoader();
       if (response.statusCode == 200) {
         var userLoginResponse =
-            UserLoginResponse.fromJson(json.decode(response.body));
+            LoginResponse.fromJson(json.decode(response.body));
         if (userLoginResponse.status == "SUCCESS") {
-          var userDetails = userLoginResponse.data!;
-          _data = userDetails.first;
+          var userDetails = userLoginResponse.user;
+          _users = userDetails!.first;
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString("authToken", _data.sId!);
+          prefs.setString("authToken", userLoginResponse.token!);
+          print("user Token -- ${userLoginResponse.token}");
+
           Fluttertoast.showToast(
-              msg: "${_data.fullName} : ${userLoginResponse.message}",
+              msg: "${_users.fullName!.firstName} : ${userLoginResponse.message}",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
@@ -169,6 +170,7 @@ class LoginPageState extends State<LoginPage>
           fontSize: 16.0);
     }
   }
+
 
   @override
   void initState() {

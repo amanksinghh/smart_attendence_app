@@ -1,25 +1,36 @@
-class UserPutLocationResponse {
-  bool? status;
-  Data? data;
+class LoginResponse {
+  String? status;
+  String? message;
+  String? token;
+  List<User>? user;
 
-  UserPutLocationResponse({this.status, this.data});
+  LoginResponse({this.status, this.message, this.token, this.user});
 
-  UserPutLocationResponse.fromJson(Map<String, dynamic> json) {
+  LoginResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+    message = json['message'];
+    token = json['token'];
+    if (json['user'] != null) {
+      user = <User>[];
+      json['user'].forEach((v) {
+        user!.add(User.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this.status;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
+    data['message'] = this.message;
+    data['token'] = this.token;
+    if (this.user != null) {
+      data['user'] = this.user!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class Data {
+class User {
   FullName? fullName;
   String? role;
   String? sId;
@@ -29,18 +40,14 @@ class Data {
   List<Userdetails>? userdetails;
   String? password;
   bool? verified;
-  List<Null>? myLeaves;
-  List<Logs>? logs;
+  List<void>? myLeaves;
+  List<void>? logs;
   String? createdAt;
   String? updatedAt;
   int? iV;
   String? userPhoto;
-  Null? currLat;
-  Null? currLong;
-  Null? entry;
-  String? exit;
 
-  Data(
+  User(
       {this.fullName,
         this.role,
         this.sId,
@@ -55,13 +62,9 @@ class Data {
         this.createdAt,
         this.updatedAt,
         this.iV,
-        this.userPhoto,
-        this.currLat,
-        this.currLong,
-        this.entry,
-        this.exit});
+        this.userPhoto});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  User.fromJson(Map<String, dynamic> json) {
     fullName = json['fullName'] != null
         ? FullName.fromJson(json['fullName'])
         : null;
@@ -81,23 +84,19 @@ class Data {
     // if (json['myLeaves'] != null) {
     //   myLeaves = <Null>[];
     //   json['myLeaves'].forEach((v) {
-    //     myLeaves!.add(new Null.fromJson(v));
+    //     myLeaves!.add(Null.fromJson(v));
     //   });
     // }
-    if (json['logs'] != null) {
-      logs = <Logs>[];
-      json['logs'].forEach((v) {
-        logs!.add(Logs.fromJson(v));
-      });
-    }
+    // if (json['logs'] != null) {
+    //   logs = <Null>[];
+    //   json['logs'].forEach((v) {
+    //     logs!.add(Null.fromJson(v));
+    //   });
+    // }
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
     userPhoto = json['userPhoto'];
-    currLat = json['currLat'];
-    currLong = json['currLong'];
-    entry = json['entry'];
-    exit = json['exit'];
   }
 
   Map<String, dynamic> toJson() {
@@ -118,17 +117,13 @@ class Data {
     // if (this.myLeaves != null) {
     //   data['myLeaves'] = this.myLeaves!.map((v) => v.toJson()).toList();
     // }
-    if (this.logs != null) {
-      data['logs'] = this.logs!.map((v) => v.toJson()).toList();
-    }
+    // if (this.logs != null) {
+    //   data['logs'] = this.logs!.map((v) => v.toJson()).toList();
+    // }
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
     data['userPhoto'] = this.userPhoto;
-    data['currLat'] = this.currLat;
-    data['currLong'] = this.currLong;
-    data['entry'] = this.entry;
-    data['exit'] = this.exit;
     return data;
   }
 }
@@ -180,28 +175,6 @@ class Userdetails {
     data['org'] = this.org;
     data['dateOfBirth'] = this.dateOfBirth;
     data['designation'] = this.designation;
-    return data;
-  }
-}
-
-class Logs {
-  String? sId;
-  String? date;
-  int? workingHours;
-
-  Logs({this.sId, this.date, this.workingHours});
-
-  Logs.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    date = json['date'];
-    workingHours = json['workingHours'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['date'] = this.date;
-    data['workingHours'] = this.workingHours;
     return data;
   }
 }

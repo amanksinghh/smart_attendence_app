@@ -7,13 +7,11 @@ import 'package:http/http.dart' as http;
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../api_models/user_by_id_response.dart';
+import '../api_models/responses/user_by_id_response.dart';
+
 import '../theme/colors.dart';
 import '../utils/service_utilities.dart';
 import 'login_utils/login_page.dart';
-
-var profile_image =
-    "https://media-exp1.licdn.com/dms/image/C5603AQEob5l8e06qQg/profile-displayphoto-shrink_800_800/0/1652278654609?e=1658361600&v=beta&t=IOrm1Y-2XbJ-wkn8Zy3ZGbcAssPC2gI4jfs4DyShYs4";
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -26,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController dateOfBirth = TextEditingController(text: "05-02-2002");
   String? authToken;
   Users? userById;
+  Userdetails? _userdetails;
 
   getLoginData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -35,14 +34,17 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> getUsers() async {
-    var url = 'https://attandance-server.onrender.com/user/${authToken}';
-    Response response = await http.get(Uri.parse(url));
+    var url = 'https://attandance-server.onrender.com/user';
+    Response response = await http.get(Uri.parse(url),headers: {
+      'Authorization': 'Bearer $authToken',
+    });
     if (response.statusCode == 200) {
       setState(() {
         var userListResponse =
             UserByIdResponse.fromJson(json.decode(response.body));
         var userDetails = userListResponse.users;
         userById = userDetails;
+        _userdetails = userById?.userdetails?.first;
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -146,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     backgroundColor: grey.withOpacity(0.3),
                                     radius: 60.0,
                                     lineWidth: 6.0,
-                                    percent: 0.7,
+                                    percent: 1,
                                     progressColor: Colors.blue),
                               ),
                               Positioned(
@@ -155,16 +157,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: Container(
                                   width: 85,
                                   height: 85,
-                                  child: Center(
-                                    child: Text(
-                                      "${userById?.fullName ?? "--"}"
-                                          .toString()
-                                          .split("")[0][0],
-                                      style: TextStyle(
-                                          fontSize: (size.width - 40) * 0.2,
-                                          color: Colors.blue),
-                                    ),
-                                  ),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: NetworkImage("${userById?.userPhoto}"),
+                                        fit: BoxFit.cover)),
                                 ),
                               )
                             ],
@@ -177,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              userById?.fullName ?? "Employee name",
+                              userById?.fullName!.firstName ?? "Employee name",
                               style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -187,7 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               height: 10,
                             ),
                             Text(
-                              userById?.org ?? "Company Name",
+                              _userdetails?.org ?? "Company Name",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -234,7 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 15,
                               ),
                               Text(
-                                userById?.designation ?? "Employee designation",
+                                _userdetails?.designation ?? "Employee designation",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
@@ -289,7 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 10,
                 ),
                 Text(
-                  userById?.dateOfBirth ?? "Employee DOB",
+                  _userdetails?.dateOfBirth ?? "Employee DOB",
                   style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
