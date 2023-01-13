@@ -317,7 +317,7 @@ class ServiceUtils {
             text: TextSpan(
                 children: <TextSpan>[
                   const TextSpan(
-                      text: "Status - ",
+                      text: "Approval - ",
                       style: TextStyle(fontSize: 14,color: Colors.blue)
                   ),
                   TextSpan(

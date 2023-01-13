@@ -1,18 +1,17 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/pages/homepage/charts_page.dart';
-
 import '../../api_models/responses/user_by_id_response.dart';
 import '../../json/day_month.dart';
 import '../../theme/colors.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -54,7 +53,9 @@ class _HomePageState extends State<HomePage> {
         var graphDataList = userDetails?.logs;
         graphData.clear();
         if (graphDataList != null && graphDataList.isNotEmpty) {
-          graphData.addAll(graphDataList);
+          setState(() {
+            graphData.addAll(graphDataList);
+          });
         }
       });
     } else {

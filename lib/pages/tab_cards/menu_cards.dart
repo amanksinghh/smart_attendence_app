@@ -70,7 +70,8 @@ class _MenuCardsState extends State<MenuCards> {
                               "--")),
                 );
               },
-            )),
+            ),
+        ),
       );
     }
   }

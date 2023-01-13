@@ -7,14 +7,16 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smart_attendence_app/face_auth_puch/punch_out.dart';
+import 'package:smart_attendence_app/face_auth_punch/punch_out.dart';
 import '../api_models/responses/user_by_id_response.dart';
 import '../dialogs/CustomProgressDialog.dart';
-import '../face_auth_puch/punch_in.dart';
+import '../face_auth_punch/punch_in.dart';
 import '../json/create_budget_json.dart';
 import '../theme/colors.dart';
 
 class MyFeedsPage extends StatefulWidget {
+  const MyFeedsPage({super.key});
+
   @override
   _MyFeedsPageState createState() => _MyFeedsPageState();
 }
@@ -50,7 +52,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
             UserByIdResponse.fromJson(json.decode(response.body));
         var userDetails = userListResponse.users;
         userById = userDetails;
-        _userdetails = userById?.userdetails?.first;
+        _userdetails = userById?.userdetails;
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

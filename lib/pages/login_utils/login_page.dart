@@ -13,7 +13,7 @@ import '../../dialogs/CustomProgressDialog.dart';
 import '../root_app.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => LoginPageState();
@@ -34,8 +34,6 @@ class LoginPageState extends State<LoginPage>
   var passwordController = TextEditingController();
 
   bool success = false;
-
-  final _formKey = GlobalKey<FormState>();
 
   //FingerPrint Settings
   final auth = LocalAuthentication();
@@ -58,7 +56,7 @@ class LoginPageState extends State<LoginPage>
     setState(() {
       authorized =
           authenticated ? "Authorized success" : "Failed to authenticate";
-      print(authorized);
+      debugPrint(authorized);
 
       if (authenticated) {
         Navigator.pushReplacement(
@@ -121,7 +119,7 @@ class LoginPageState extends State<LoginPage>
       hideLoader();
       if (response.statusCode == 200) {
         var userLoginResponse =
-            LoginResponse.fromJson(json.decode(response.body));
+        UserLoginResponse.fromJson(json.decode(response.body));
         if (userLoginResponse.status == "SUCCESS") {
           var userDetails = userLoginResponse.user;
           _users = userDetails!.first;
@@ -225,7 +223,7 @@ class LoginPageState extends State<LoginPage>
                   children: <Widget>[
                     // ignore: prefer_const_constructors
                     Container(
-                      child: new ScaleTransition(
+                      child: ScaleTransition(
                         scale: _animation,
                         child: const Image(
                           image: AssetImage("assets/images/logo.png"),

@@ -4,13 +4,13 @@ class UserByIdResponse {
   UserByIdResponse({this.users});
 
   UserByIdResponse.fromJson(Map<String, dynamic> json) {
-    users = json['users'] != null ? new Users.fromJson(json['users']) : null;
+    users = json['users'] != null ? Users.fromJson(json['users']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.users != null) {
-      data['users'] = this.users!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (users != null) {
+      data['users'] = users!.toJson();
     }
     return data;
   }
@@ -18,20 +18,20 @@ class UserByIdResponse {
 
 class Users {
   FullName? fullName;
+  Userdetails? userdetails;
   String? role;
+  String? userPhoto;
   String? sId;
   String? email;
   String? orgLongitude;
   String? orgLatitude;
-  List<Userdetails>? userdetails;
   String? password;
   bool? verified;
-  List<Null>? myLeaves;
+  List<MyLeaves>? myLeaves;
   List<Logs>? logs;
   String? createdAt;
   String? updatedAt;
   int? iV;
-  String? userPhoto;
   String? currLat;
   String? currLong;
   String? entry;
@@ -39,12 +39,13 @@ class Users {
 
   Users(
       {this.fullName,
+        this.userdetails,
         this.role,
+        this.userPhoto,
         this.sId,
         this.email,
         this.orgLongitude,
         this.orgLatitude,
-        this.userdetails,
         this.password,
         this.verified,
         this.myLeaves,
@@ -52,7 +53,6 @@ class Users {
         this.createdAt,
         this.updatedAt,
         this.iV,
-        this.userPhoto,
         this.currLat,
         this.currLong,
         this.entry,
@@ -60,37 +60,34 @@ class Users {
 
   Users.fromJson(Map<String, dynamic> json) {
     fullName = json['fullName'] != null
-        ? new FullName.fromJson(json['fullName'])
+        ? FullName.fromJson(json['fullName'])
+        : null;
+    userdetails = json['userdetails'] != null
+        ? Userdetails.fromJson(json['userdetails'])
         : null;
     role = json['role'];
+    userPhoto = json['userPhoto'];
     sId = json['_id'];
     email = json['email'];
     orgLongitude = json['orgLongitude'];
     orgLatitude = json['orgLatitude'];
-    if (json['userdetails'] != null) {
-      userdetails = <Userdetails>[];
-      json['userdetails'].forEach((v) {
-        userdetails!.add(new Userdetails.fromJson(v));
-      });
-    }
     password = json['password'];
     verified = json['verified'];
-    // if (json['myLeaves'] != null) {
-    //   myLeaves = <Null>[];
-    //   json['myLeaves'].forEach((v) {
-    //     myLeaves!.add(new Null.fromJson(v));
-    //   });
-    // }
+    if (json['myLeaves'] != null) {
+      myLeaves = <MyLeaves>[];
+      json['myLeaves'].forEach((v) {
+        myLeaves!.add(MyLeaves.fromJson(v));
+      });
+    }
     if (json['logs'] != null) {
       logs = <Logs>[];
       json['logs'].forEach((v) {
-        logs!.add(new Logs.fromJson(v));
+        logs!.add(Logs.fromJson(v));
       });
     }
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
-    userPhoto = json['userPhoto'];
     currLat = json['currLat'];
     currLong = json['currLong'];
     entry = json['entry'];
@@ -98,34 +95,34 @@ class Users {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.fullName != null) {
-      data['fullName'] = this.fullName!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (fullName != null) {
+      data['fullName'] = fullName!.toJson();
     }
-    data['role'] = this.role;
-    data['_id'] = this.sId;
-    data['email'] = this.email;
-    data['orgLongitude'] = this.orgLongitude;
-    data['orgLatitude'] = this.orgLatitude;
-    if (this.userdetails != null) {
-      data['userdetails'] = this.userdetails!.map((v) => v.toJson()).toList();
+    if (userdetails != null) {
+      data['userdetails'] = userdetails!.toJson();
     }
-    data['password'] = this.password;
-    data['verified'] = this.verified;
-    // if (this.myLeaves != null) {
-    //   data['myLeaves'] = this.myLeaves!.map((v) => v.toJson()).toList();
-    // }
-    if (this.logs != null) {
-      data['logs'] = this.logs!.map((v) => v.toJson()).toList();
+    data['role'] = role;
+    data['userPhoto'] = userPhoto;
+    data['_id'] = sId;
+    data['email'] = email;
+    data['orgLongitude'] = orgLongitude;
+    data['orgLatitude'] = orgLatitude;
+    data['password'] = password;
+    data['verified'] = verified;
+    if (myLeaves != null) {
+      data['myLeaves'] = myLeaves!.map((v) => v.toJson()).toList();
     }
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
-    data['userPhoto'] = this.userPhoto;
-    data['currLat'] = this.currLat;
-    data['currLong'] = this.currLong;
-    data['entry'] = this.entry;
-    data['exit'] = this.exit;
+    if (logs != null) {
+      data['logs'] = logs!.map((v) => v.toJson()).toList();
+    }
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
+    data['currLat'] = currLat;
+    data['currLong'] = currLong;
+    data['entry'] = entry;
+    data['exit'] = exit;
     return data;
   }
 }
@@ -144,39 +141,104 @@ class FullName {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['firstName'] = this.firstName;
-    data['middleName'] = this.middleName;
-    data['lastName'] = this.lastName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['firstName'] = firstName;
+    data['middleName'] = middleName;
+    data['lastName'] = lastName;
     return data;
   }
 }
 
 class Userdetails {
-  List<int>? phone;
-  String? sId;
+  Address? address;
   String? org;
   String? dateOfBirth;
   String? designation;
+  int? phone;
 
   Userdetails(
-      {this.phone, this.sId, this.org, this.dateOfBirth, this.designation});
+      {this.address, this.org, this.dateOfBirth, this.designation, this.phone});
 
   Userdetails.fromJson(Map<String, dynamic> json) {
-    phone = json['phone'].cast<int>();
-    sId = json['_id'];
+    address =
+    json['address'] != null ? Address.fromJson(json['address']) : null;
     org = json['org'];
     dateOfBirth = json['dateOfBirth'];
     designation = json['designation'];
+    phone = json['phone'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['phone'] = this.phone;
-    data['_id'] = this.sId;
-    data['org'] = this.org;
-    data['dateOfBirth'] = this.dateOfBirth;
-    data['designation'] = this.designation;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (address != null) {
+      data['address'] = address!.toJson();
+    }
+    data['org'] = org;
+    data['dateOfBirth'] = dateOfBirth;
+    data['designation'] = designation;
+    data['phone'] = phone;
+    return data;
+  }
+}
+
+class Address {
+  String? street;
+  String? city;
+  int? pin;
+  String? country;
+
+  Address({this.street, this.city, this.pin, this.country});
+
+  Address.fromJson(Map<String, dynamic> json) {
+    street = json['street'];
+    city = json['city'];
+    pin = json['pin'];
+    country = json['country'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['street'] = street;
+    data['city'] = city;
+    data['pin'] = pin;
+    data['country'] = country;
+    return data;
+  }
+}
+
+class MyLeaves {
+  String? leaveType;
+  bool? leaveStatus;
+  String? sId;
+  String? from;
+  String? to;
+  String? reason;
+
+  MyLeaves(
+      {this.leaveType,
+        this.leaveStatus,
+        this.sId,
+        this.from,
+        this.to,
+        this.reason});
+
+  MyLeaves.fromJson(Map<String, dynamic> json) {
+    leaveType = json['leaveType'];
+    leaveStatus = json['leaveStatus'];
+    sId = json['_id'];
+    from = json['from'];
+    to = json['to'];
+    reason = json['reason'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['leaveType'] = leaveType;
+    data['leaveStatus'] = leaveStatus;
+    data['_id'] = sId;
+    data['from'] = from;
+    data['to'] = to;
+    data['reason'] = reason;
     return data;
   }
 }
@@ -195,10 +257,10 @@ class Logs {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['date'] = this.date;
-    data['workingHours'] = this.workingHours;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['date'] = date;
+    data['workingHours'] = workingHours;
     return data;
   }
 }

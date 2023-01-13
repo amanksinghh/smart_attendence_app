@@ -14,17 +14,17 @@ import '../utils/service_utilities.dart';
 import 'login_utils/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  TextEditingController _email =
-      TextEditingController(text: "ritesh.k@aimtron.com");
   TextEditingController dateOfBirth = TextEditingController(text: "05-02-2002");
   String? authToken;
   Users? userById;
-  Userdetails? _userdetails;
+  Userdetails? _userDetails;
 
   getLoginData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
             UserByIdResponse.fromJson(json.decode(response.body));
         var userDetails = userListResponse.users;
         userById = userDetails;
-        _userdetails = userById?.userdetails?.first;
+        _userDetails = userById?.userdetails;
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -184,7 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               height: 10,
                             ),
                             Text(
-                              _userdetails?.org ?? "Company Name",
+                              _userDetails?.org ?? "Company Name",
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -231,7 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 15,
                               ),
                               Text(
-                                _userdetails?.designation ?? "Employee designation",
+                                _userDetails?.designation ?? "Employee designation",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
@@ -286,7 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 10,
                 ),
                 Text(
-                  _userdetails?.dateOfBirth ?? "Employee DOB",
+                  _userDetails?.dateOfBirth ?? "Employee DOB",
                   style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
