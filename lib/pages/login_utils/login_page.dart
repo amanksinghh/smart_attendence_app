@@ -201,7 +201,7 @@ class LoginPageState extends State<LoginPage>
         fit: StackFit.expand,
         children: [
           const Image(
-            image: AssetImage("assets/images/aimtron_building.jpg"),
+            image: AssetImage("assets/images/login_back.png"),
             fit: BoxFit.cover,
             colorBlendMode: BlendMode.darken,
             color: Colors.black87,
@@ -226,7 +226,7 @@ class LoginPageState extends State<LoginPage>
                       child: ScaleTransition(
                         scale: _animation,
                         child: const Image(
-                          image: AssetImage("assets/images/logo.png"),
+                          image: AssetImage("assets/images/login_img.png"),
                           height: 300,
                           width: 250,
                         ),

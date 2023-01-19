@@ -505,7 +505,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
     print(" IPV4 : $ipv4");
     final ipv6 = await Ipify.ipv64();
     print("IPV6 : $ipv6");
-    String checkIpv6 = "115.246.26.84";
+    String checkIpv6 = "49.34.132.168";
     if (ipv4 == checkIpv6) {
       hideLoader(context);
       if(isPunchedIn == true){

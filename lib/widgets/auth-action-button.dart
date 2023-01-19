@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -64,28 +65,26 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   getLoginData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
-    print(authToken);
     getUsers();
     return authToken;
   }
 
   Future<void> getUsers() async {
-    var url = 'https://attandance-server.onrender.com/user/${authToken}';
+    var url = 'https://attandance-server.onrender.com/user/$authToken';
     Response response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var userListResponse =
           UserByIdResponse.fromJson(json.decode(response.body));
       var userDetails = userListResponse.users;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Something went wrong !"),
+      Fluttertoast.showToast(
+          msg: "Something went wrong !",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
-          duration: Duration(seconds: 2),
-          dismissDirection: DismissDirection.down,
-          elevation: 10,
-        ),
-      );
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 
