@@ -4,11 +4,10 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:smart_attendence_app/pages/homepage/homepage.dart';
 
-import '../theme/colors.dart';
-import 'summary_page.dart';
+import 'cafeteria_page.dart';
 import 'my_feeds.dart';
 import 'profile_page.dart';
-import 'cafeteria_page.dart';
+import 'summary_page.dart';
 
 class RootApp extends StatefulWidget {
   final int pageIndex;
@@ -26,7 +25,7 @@ class _RootAppState extends State<RootApp> {
     // DailyPage(),
     HomePage(),
     CafeteriaPage(),
-    SummaryPage(),
+    SummaryPage(pageIndex: 0),
     ProfilePage(),
     MyFeedsPage()
   ];

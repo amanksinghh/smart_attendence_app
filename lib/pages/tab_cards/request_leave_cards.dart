@@ -7,8 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/api_models/responses/user_by_id_response.dart';
-import 'package:smart_attendence_app/pages/root_app.dart';
-import 'package:smart_attendence_app/pages/tab_cards/leaves_cards.dart';
+import 'package:smart_attendence_app/pages/summary_page.dart';
 
 import '../login_utils/login_page.dart';
 
@@ -46,6 +45,7 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
     }
     return null;
   }
+
   String? reasonValidator(String? fieldContent) {
     if (fieldContent!.isEmpty) {
       return "Please input Reason";
@@ -53,14 +53,14 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
     return null;
   }
 
-
   getUserToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
     onSuccessButton();
     return authToken;
   }
-   Future onSuccessButton() async {
+
+  Future onSuccessButton() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
@@ -68,7 +68,7 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
       try {
         String url = "https://attandance-server.onrender.com/user/leaves";
         Map data = {
-          "myLeaves":{
+          "myLeaves": {
             'leaveType': _leaveType!,
             'from': fromDateController.text.trim(),
             'to': toDateController.text.trim(),
@@ -79,35 +79,33 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
         final http.Response response = await http.post(
           Uri.parse(url),
           body: body,
-          headers: <String , String>{
+          headers: <String, String>{
             'Authorization': 'Bearer $authToken',
             'Content-Type': 'application/json; charset=UTF-8',
-
           },
         );
-    if (response.statusCode == 200){
-      String jsonData= response.body;
-        _isLoading = false;
-      print("Status:${response.statusCode}");
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LeavesCards(),
-        ),
-      );
-      print(response.statusCode);
-      Fluttertoast.showToast(
-          msg: "Leave request pending",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-       return MyLeaves.fromJson(json.decode(jsonData));
-    }
-        else {
-          _isLoading=false;
+        if (response.statusCode == 200) {
+          String jsonData = response.body;
+          _isLoading = false;
+          print("Status:${response.statusCode}");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SummaryPage(pageIndex: 0),
+            ),
+          );
+          print(response.statusCode);
+          Fluttertoast.showToast(
+              msg: "Leave request pending",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          return MyLeaves.fromJson(json.decode(jsonData));
+        } else {
+          _isLoading = false;
           print("Status:${response.statusCode}");
           Fluttertoast.showToast(
               msg: "Invalid Leave request",
@@ -118,29 +116,27 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
               textColor: Colors.white,
               fontSize: 16.0);
           throw Exception('Failed to create leaves');
-
         }
-      }catch (err) {
+      } catch (err) {
         print(err);
-        setState(() {
-
-        });
+        setState(() {});
         rethrow;
       }
     }
   }
+
   @override
   void initState() {
     super.initState();
     getUserToken();
-    _isLoading= false;
+    _isLoading = false;
     targetMonth = DateTime.now();
     initialDate = DateTime.now();
     formattedDated = DateFormat.yMd().format(initialDate);
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     setState(() {
       fromDateController.dispose();
@@ -148,6 +144,7 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
       leaveReasonController.dispose();
     });
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -226,7 +223,7 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
                   padding: const EdgeInsets.only(top: 15.0),
                   child: TextFormField(
                     controller: toDateController,
-                    validator:checkDateValidator,
+                    validator: checkDateValidator,
                     decoration: InputDecoration(
                       labelText: "To Date",
                       suffixIcon: IconButton(
@@ -282,9 +279,9 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
                     value: _leaveType,
                     items: _leaveTypeList
                         .map((e) => DropdownMenuItem(
-                      child: Text(e),
-                      value: e,
-                    ))
+                              child: Text(e),
+                              value: e,
+                            ))
                         .toList(),
                     onChanged: (String? value) {
                       setState(() {
@@ -321,7 +318,7 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
                   padding: const EdgeInsets.only(top: 15.0),
                   child: TextFormField(
                     controller: leaveReasonController,
-                    validator:reasonValidator,
+                    validator: reasonValidator,
                     maxLines: 4,
                     minLines: 1,
                     decoration: const InputDecoration(
@@ -356,13 +353,12 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
                   minWidth: 100,
                   child: _isLoading
                       ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ))
-                      :
-                 const Text("Submit"),
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ))
+                      : const Text("Submit"),
                 ),
               ],
             ),
