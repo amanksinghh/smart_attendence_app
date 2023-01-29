@@ -7,8 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/api_models/responses/user_by_id_response.dart';
+import 'package:smart_attendence_app/pages/root_app.dart';
 import 'package:smart_attendence_app/pages/summary_page.dart';
 
+import '../../dialogs/CustomProgressDialog.dart';
 import '../login_utils/login_page.dart';
 
 class RequestLeaveCards extends StatefulWidget {
@@ -33,11 +35,8 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
 
   String? authToken;
   Users? userById;
-  late MyLeaves myLeaves = MyLeaves();
   String? _leaveType = "";
   final _leaveTypeList = ["Unpaid", "Paid"];
-  final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
 
   String? checkDateValidator(String? fieldContent) {
     if (fieldContent!.isEmpty) {
@@ -53,29 +52,58 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
     return null;
   }
 
-  getUserToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    authToken = prefs.getString("authToken");
-    onSuccessButton();
-    return authToken;
+  bool isDialogShowing = false;
+  showLoader() {
+    if (!isDialogShowing) {
+      isDialogShowing = true;
+      showDialog(
+          context: context,
+          barrierColor: Colors.transparent,
+          builder: (BuildContext context) {
+            return const CustomProgressDialog();
+          }).then((value) {
+        isDialogShowing = false;
+      });
+    }
   }
 
-  Future onSuccessButton() async {
+  hideLoader() {
+    if (isDialogShowing) {
+      Navigator.pop(context);
+    }
+  }
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  void _startLoading() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
       try {
+        await onSuccessButton();
+      } catch (err) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            duration: Duration(seconds: 3), content: Text("Server Error")));
+        print(err);
+      }
+    }
+  }
+
+  Future<void> onSuccessButton() async {
+    Map data = {
+      "myLeaves": {
+        'leaveType': _leaveType!,
+        'from': fromDateController.text,
+        'to': toDateController.text,
+        'reason': leaveReasonController.text.trim()
+      }
+    };
+    String body = json.encode(data);
+    if (fromDateController.text.isNotEmpty &&
+        toDateController.text.isNotEmpty &&
+        leaveReasonController.text.isNotEmpty) {
+      showLoader();
         String url = "https://attandance-server.onrender.com/user/leaves";
-        Map data = {
-          "myLeaves": {
-            'leaveType': _leaveType!,
-            'from': fromDateController.text.trim(),
-            'to': toDateController.text.trim(),
-            'reason': leaveReasonController.text.trim()
-          }
-        };
-        String body = json.encode(data);
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        authToken = prefs.getString("authToken");
+
         final http.Response response = await http.post(
           Uri.parse(url),
           body: body,
@@ -84,28 +112,29 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
             'Content-Type': 'application/json; charset=UTF-8',
           },
         );
+      hideLoader();
         if (response.statusCode == 200) {
-          String jsonData = response.body;
-          _isLoading = false;
+          //String jsonData = response.body;
           print("Status:${response.statusCode}");
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => SummaryPage(pageIndex: 0),
+              builder: (context) => RootApp(pageIndex: 2),
             ),
           );
           print(response.statusCode);
           Fluttertoast.showToast(
-              msg: "Leave request pending",
+              msg: "Leave request successfull",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.red,
               textColor: Colors.white,
               fontSize: 16.0);
-          return MyLeaves.fromJson(json.decode(jsonData));
+          // return MyLeaves.fromJson(json.decode(jsonData));
         } else {
-          _isLoading = false;
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          authToken = prefs.getString(" ");
           print("Status:${response.statusCode}");
           Fluttertoast.showToast(
               msg: "Invalid Leave request",
@@ -117,19 +146,24 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
               fontSize: 16.0);
           throw Exception('Failed to create leaves');
         }
-      } catch (err) {
-        print(err);
-        setState(() {});
-        rethrow;
       }
-    }
+    // else{
+    //   Fluttertoast.showToast(
+    //       msg: "Please Enter all field",
+    //       toastLength: Toast.LENGTH_SHORT,
+    //       gravity: ToastGravity.CENTER,
+    //       timeInSecForIosWeb: 1,
+    //       backgroundColor: Colors.red,
+    //       textColor: Colors.white,
+    //       fontSize: 16.0);
+    //   SharedPreferences prefs = await SharedPreferences.getInstance();
+    //   authToken = prefs.getString(" ");
+    // }
   }
 
   @override
   void initState() {
     super.initState();
-    getUserToken();
-    _isLoading = false;
     targetMonth = DateTime.now();
     initialDate = DateTime.now();
     formattedDated = DateFormat.yMd().format(initialDate);
@@ -137,12 +171,12 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
 
   @override
   void dispose() {
+    onSuccessButton();
+
+    fromDateController.dispose();
+    toDateController.dispose();
+    leaveReasonController.dispose();
     super.dispose();
-    setState(() {
-      fromDateController.dispose();
-      toDateController.dispose();
-      leaveReasonController.dispose();
-    });
   }
 
   @override
@@ -158,7 +192,6 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
 
   @override
   Widget build(BuildContext context) {
-    getUserToken();
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -340,9 +373,9 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
                   padding: EdgeInsets.only(top: 25.0),
                 ),
                 MaterialButton(
-                  onPressed: () {
-                    onSuccessButton();
-                  },
+                  onPressed: (){
+                    _startLoading();
+                    },
                   color: Colors.blue,
                   textColor: Colors.white,
                   elevation: 10,
@@ -351,14 +384,7 @@ class _RequestLeaveCardsState extends State<RequestLeaveCards> {
                   splashColor: const Color.fromARGB(255, 34, 65, 241),
                   height: 40,
                   minWidth: 100,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ))
-                      : const Text("Submit"),
+                  child: const Text("Submit"),
                 ),
               ],
             ),

@@ -27,7 +27,9 @@ class _RootAppState extends State<RootApp> {
     CafeteriaPage(),
     SummaryPage(pageIndex: 0),
     ProfilePage(),
-    MyFeedsPage()
+    MyFeedsPage(),
+    SummaryPage(pageIndex: 1),
+    SummaryPage(pageIndex: 2),
   ];
 
   @override
