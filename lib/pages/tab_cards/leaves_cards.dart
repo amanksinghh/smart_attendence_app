@@ -9,7 +9,6 @@ import 'package:smart_attendence_app/utils/service_utilities.dart';
 import '../../api_models/responses/user_by_id_response.dart';
 import '../../theme/colors.dart';
 
-
 class LeavesCards extends StatefulWidget {
   const LeavesCards({Key? key}) : super(key: key);
 
@@ -18,29 +17,27 @@ class LeavesCards extends StatefulWidget {
 }
 
 class _LeavesCardsState extends State<LeavesCards> {
-
   String? authToken;
   Users? userById;
   late List<MyLeaves>? myLeaves = [];
 
-  getUserToken() async {
+  _getUserToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
-    getMyLeaves();
-    return authToken;
+    await _getMyLeaves();
   }
 
-   getMyLeaves() async {
+  _getMyLeaves() async {
     var url = 'https://attandance-server.onrender.com/user';
-    Response response = await http.get(Uri.parse(url),headers: {
+    Response response = await http.get(Uri.parse(url), headers: {
       'Authorization': 'Bearer $authToken',
     });
     if (response.statusCode == 200) {
+      var userListResponse =
+          UserByIdResponse.fromJson(json.decode(response.body));
+      var userDetails = userListResponse.users;
+      userById = userDetails;
       setState(() {
-        var userListResponse =
-        UserByIdResponse.fromJson(json.decode(response.body));
-        var userDetails = userListResponse.users;
-        userById = userDetails;
         myLeaves = userDetails?.myLeaves!;
       });
     } else {
@@ -57,8 +54,13 @@ class _LeavesCardsState extends State<LeavesCards> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _getUserToken();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    getUserToken();
     return Scaffold(
       body: SafeArea(
         child: ListView.builder(
@@ -83,5 +85,4 @@ class _LeavesCardsState extends State<LeavesCards> {
       ),
     );
   }
-
 }

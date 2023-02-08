@@ -39,11 +39,9 @@ dependencies:
   geolocator: ^9.0.2
   camera: ^0.10.0+5
   path: ^1.8.0
-  google_ml_kit: ^0.13.0
   animated_bottom_navigation_bar: ^1.1.0
   sqflite: ^2.0.2+1
   path_provider: ^2.0.10
-  image: ^3.0.2
   url_launcher: ^6.0.3
   get_it: ^7.2.0
   shared_preferences: any
@@ -68,6 +66,8 @@ dependencies:
   dart_ipify: ^1.1.1
   flutter_svg: ^1.1.6
   syncfusion_flutter_charts: ^20.4.42
+  flutter_face_api: ^4.1.1
+  image_picker: ^0.8.6+1
 
 dev_dependencies:
   flutter_test:

@@ -8,9 +8,10 @@ import 'package:http/http.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/face_auth_punch/punch_out.dart';
+
 import '../api_models/responses/user_by_id_response.dart';
 import '../dialogs/CustomProgressDialog.dart';
-import '../face_auth_punch/punch_in.dart';
+import '../face_auth_punch/face_match.dart';
 import '../json/create_budget_json.dart';
 import '../theme/colors.dart';
 
@@ -43,7 +44,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
 
   Future<void> getUsers() async {
     var url = 'https://attandance-server.onrender.com/user';
-    Response response = await http.get(Uri.parse(url),headers: {
+    Response response = await http.get(Uri.parse(url), headers: {
       'Authorization': 'Bearer $authToken',
     });
     if (response.statusCode == 200) {
@@ -89,6 +90,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
       _updateTimer();
       _ticker =
           Timer.periodic(const Duration(seconds: 1), (_) => _updateTimer());
+      hideLoader(context);
     });
   }
 
@@ -151,7 +153,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20,right: 20),
+                  padding: const EdgeInsets.only(left: 20, right: 20),
                   child: Row(
                     children: [
                       Container(
@@ -178,7 +180,8 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                                   decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
-                                          image: NetworkImage("${userById?.userPhoto}"),
+                                          image: NetworkImage(
+                                              "${userById?.userPhoto}"),
                                           fit: BoxFit.cover)),
                                 ),
                               )
@@ -228,7 +231,8 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                   height: 30,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 10,right: 10,bottom: 10),
+                  padding:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
@@ -244,7 +248,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                         ]),
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 15, right: 15, top: 20,bottom: 20),
+                          left: 15, right: 15, top: 20, bottom: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -409,9 +413,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              // Navigator.push(context, MaterialPageRoute(builder: (context) => const PunchIn())).whenComplete(() => {functionThatSetsTheState()});
-                            },
+                            onTap: () {},
                             child: Container(
                                 width: 60,
                                 height: 65,
@@ -506,48 +508,49 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
     final ipv6 = await Ipify.ipv64();
     print("IPV6 : $ipv6");
     String checkIpv6 = "49.34.132.168";
-    if (ipv4 == checkIpv6) {
-      hideLoader(context);
-      if(isPunchedIn == true){
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Already punched in !"),
-          backgroundColor: Colors.red,
-        ));
-      }
-      else{
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const PunchIn()))
-            .whenComplete(() => {functionThatStartsTimer()});
-      }
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Connected to Organization Wifi."),
-        backgroundColor: Colors.green,
-      ));
-    } else {
-      hideLoader(context);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Please Connect to Organization Wifi."),
-        backgroundColor: Colors.red,
-      ));
-    }
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => FaceMatch()));
+    // Navigator.push(
+    //         context, MaterialPageRoute(builder: (context) => const PunchIn()))
+    //     .whenComplete(() => {functionThatStartsTimer()});
+    // if (ipv4 == checkIpv6) {
+    //   hideLoader(context);
+    //   if(isPunchedIn == true){
+    //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    //       content: Text("Already punched in !"),
+    //       backgroundColor: Colors.red,
+    //     ));
+    //   }
+    //   else{
+    //     Navigator.push(
+    //         context, MaterialPageRoute(builder: (context) => const PunchIn()))
+    //         .whenComplete(() => {functionThatStartsTimer()});
+    //   }
+    //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    //     content: Text("Connected to Organization Wifi."),
+    //     backgroundColor: Colors.green,
+    //   ));
+    // } else {
+    //   hideLoader(context);
+    //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+    //     content: Text("Please Connect to Organization Wifi."),
+    //     backgroundColor: Colors.red,
+    //   ));
+    // }
   }
 
-  checkPunchedIn(){
-    if(isPunchedIn == true){
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const PunchOut()))
+  checkPunchedIn() {
+    if (isPunchedIn == true) {
+      Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const PunchOut()))
           .whenComplete(() => {functionThatSetsTheState()});
-    }
-    else{
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Please punch in first !"),
         backgroundColor: Colors.red,
       ));
     }
   }
-
 
   demoToast() {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:smart_attendence_app/pages/login_utils/login_page.dart';
 import 'package:smart_attendence_app/pages/root_app.dart';
 import 'package:smart_attendence_app/pages/splash/splash_screen.dart';
-import 'package:smart_attendence_app/services/locator.dart';
 
 final routes = {
   '/': (context) => RootApp(pageIndex: 0,),
@@ -11,7 +10,6 @@ final routes = {
 };
 
 void main() {
-  setupServices();
   runApp(const MyApp());
 }
 
