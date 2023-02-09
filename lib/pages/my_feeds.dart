@@ -3,8 +3,11 @@ import 'dart:convert';
 
 import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_attendence_app/face_auth_punch/punch_out.dart';
@@ -29,12 +32,20 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
   late Timer _ticker;
   bool isDialogShowing = false;
   String? authToken;
+  String? formattedDate;
+
+  late LocationPermission permission;
+  Position? position;
+  String? long, lat;
+  double kmDistance = 0.00;
+  double distanceBetween = 0.00;
 
   Users? userById;
   Userdetails? _userdetails;
 
   bool isPunchedIn = false;
 
+  ///getting the auth_token from local storage.
   getLoginData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("authToken");
@@ -42,6 +53,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
     return authToken;
   }
 
+  ///calling the api to get user_details.
   Future<void> getUsers() async {
     var url = 'https://attandance-server.onrender.com/user';
     Response response = await http.get(Uri.parse(url), headers: {
@@ -72,8 +84,15 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
   void initState() {
     super.initState();
     getLoginData();
+    setState(
+      () {
+        formattedDate = DateFormat.jm().format(DateTime.now());
+        getLocation();
+      },
+    );
   }
 
+  ///function to stop working hour timer called after punch_out screen.
   void functionThatSetsTheState() {
     setState(() {
       getUsers();
@@ -82,6 +101,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
     });
   }
 
+  ///function to start working hour timer called after punch_in screen.
   functionThatStartsTimer() {
     setState(() {
       isPunchedIn = true;
@@ -482,6 +502,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
     );
   }
 
+  ///function for working hours update.
   void _updateTimer() {
     final duration = DateTime.now().difference(_lastButtonPress);
     final newDuration = _formatDuration(duration);
@@ -501,6 +522,7 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
+  ///for checking ip_address on hitting punch_in.
   checkIpAddress() async {
     showLoader(context);
     final ipv4 = await Ipify.ipv4();
@@ -508,8 +530,14 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
     final ipv6 = await Ipify.ipv64();
     print("IPV6 : $ipv6");
     String checkIpv6 = "49.34.132.168";
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => FaceMatch()));
+
+    //checkLocation();
+
+    hideLoader(context);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => FaceMatch(imageString: userById?.userFaceData![0] ?? "assets/images/image.JPG",)))
+        .whenComplete(() => {functionThatStartsTimer()});
+
     // Navigator.push(
     //         context, MaterialPageRoute(builder: (context) => const PunchIn()))
     //     .whenComplete(() => {functionThatStartsTimer()});
@@ -539,6 +567,50 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
     // }
   }
 
+  ///after ip_address it will check for user_location.
+  checkLocation() {
+    lat = position?.latitude.toString();
+    long = position?.longitude.toString();
+    distanceBetween = Geolocator.distanceBetween(
+      double. parse(userById?.orgLatitude ?? ""),
+      double.parse(userById?.orgLongitude ?? ""),
+      position?.latitude ?? 0.00,
+      position?.longitude ?? 0.00,
+    );
+    kmDistance = distanceBetween / 1000;
+    if (kmDistance <= 1) {
+      hideLoader(context);
+      Navigator.push(context,
+              MaterialPageRoute(builder: (context) => FaceMatch(imageString: userById?.userFaceData![0] ?? "assets/images/image.JPG",)))
+          .whenComplete(() => {functionThatStartsTimer()});
+    } else {
+      hideLoader(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("You are out of Organization."),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  ///getting user location.
+  getLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      print("Permission not granted");
+      Geolocator.requestPermission();
+    } else {
+      position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+      print(position!.latitude.toString());
+      print(position!.longitude.toString());
+    }
+  }
+
+  ///checking if user is punched_in or not before opening punch_out.
   checkPunchedIn() {
     if (isPunchedIn == true) {
       Navigator.push(context,

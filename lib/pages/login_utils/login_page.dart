@@ -128,7 +128,7 @@ class LoginPageState extends State<LoginPage>
           print("user Token -- ${userLoginResponse.token}");
 
           Fluttertoast.showToast(
-              msg: "${_users.fullName!.firstName} : ${userLoginResponse.message}",
+              msg: "${_users.fullName?.firstName ?? "employee_name"} : ${userLoginResponse.message}",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
