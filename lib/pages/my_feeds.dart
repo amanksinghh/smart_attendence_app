@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -538,6 +537,8 @@ class _MyFeedsPageState extends State<MyFeedsPage> {
         MaterialPageRoute(builder: (context) => FaceMatch(imageString: userById?.userFaceData![0] ?? "assets/images/image.JPG",)))
         .whenComplete(() => {functionThatStartsTimer()});
 
+    // Navigator.push(
+    //              context, MaterialPageRoute(builder: (context) => const LoginPage()));
     // Navigator.push(
     //         context, MaterialPageRoute(builder: (context) => const PunchIn()))
     //     .whenComplete(() => {functionThatStartsTimer()});

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:smart_attendence_app/pages/login_utils/login_page.dart';
 import 'package:smart_attendence_app/pages/root_app.dart';
@@ -9,7 +10,8 @@ final routes = {
   "/login": (context) => const LoginPage(),
 };
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

@@ -58,11 +58,11 @@ class _FaceMatchState extends State<FaceMatch> {
                   ImagePicker()
                       .pickImage(source: ImageSource.gallery)
                       .then((value) => {
-                            setImage(
-                                first,
-                                io.File(value!.path).readAsBytesSync(),
-                                regula.ImageType.PRINTED)
-                          });
+                    setImage(
+                        first,
+                        io.File(value!.path).readAsBytesSync(),
+                        regula.ImageType.PRINTED)
+                  });
                 }),
             // ignore: deprecated_member_use
             TextButton(
@@ -72,7 +72,7 @@ class _FaceMatchState extends State<FaceMatch> {
                       setImage(
                           first,
                           base64Decode(regula.FaceCaptureResponse.fromJson(
-                                  json.decode(result))!
+                              json.decode(result))!
                               .image!
                               .bitmap!
                               .replaceAll("\n", "")),
@@ -91,17 +91,16 @@ class _FaceMatchState extends State<FaceMatch> {
         img1 = Image.memory(imageFile);
         _captureImage = "Not matched";
       });
-    } else {
+    }
       image2.bitmap = base64Encode(imageFile);
       image2.imageType = type;
-      setState(() => img2 = Image.memory(imageFile));
-    }
+      setState(() => img2 = Image.network(widget.imageString));
   }
 
   clearResults() {
     setState(() {
-      img1 = Image.asset('assets/images/image.JPG');
-      img2 = Image.asset('assets/images/image.JPG');
+      img1 = Image.asset('assets/images/test_image.jpeg');
+      img2 = Image.asset('assets/images/test_image.jpeg');
       _similarity = "nil";
       _captureImage = "nil";
     });
@@ -117,7 +116,7 @@ class _FaceMatchState extends State<FaceMatch> {
     regula.FaceSDK.matchFaces(jsonEncode(request)).then((value) {
       var response = regula.MatchFacesResponse.fromJson(json.decode(value));
       regula.FaceSDK.matchFacesSimilarityThresholdSplit(
-              jsonEncode(response!.results), 0.75)
+          jsonEncode(response!.results), 0.75)
           .then((str) {
         var split = regula.MatchFacesSimilarityThresholdSplit.fromJson(
             json.decode(str));
@@ -140,7 +139,7 @@ class _FaceMatchState extends State<FaceMatch> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text("Face Matched and Puched_In"),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.green,
       ),
     );
     Navigator.pop(context);
@@ -161,29 +160,29 @@ class _FaceMatchState extends State<FaceMatch> {
   }
 
   captureImageFunc() => regula.FaceSDK.startLiveness().then((value) {
-        var result = regula.LivenessResponse.fromJson(json.decode(value));
-        setImage(true, base64Decode(result!.bitmap!.replaceAll("\n", "")),
-            regula.ImageType.LIVE);
-        matchFaces();
-        setState(
+    var result = regula.LivenessResponse.fromJson(json.decode(value));
+    setImage(true, base64Decode(result!.bitmap!.replaceAll("\n", "")),
+        regula.ImageType.LIVE);
+    matchFaces();
+    setState(
             () => _captureImage = result.liveness == 0 ? "passed" : "Failed");
-      });
+  });
 
   Widget createButton(String text, VoidCallback onPress) => Container(
-        // ignore: deprecated_member_use
-        width: 250,
-        // ignore: deprecated_member_use
-        child: TextButton(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
-            ),
-            onPressed: onPress,
-            child: Text(text)),
-      );
+    // ignore: deprecated_member_use
+    width: 250,
+    // ignore: deprecated_member_use
+    child: TextButton(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.black12),
+        ),
+        onPressed: onPress,
+        child: Text(text)),
+  );
 
   Widget createImage(image, VoidCallback onPress) => Material(
-          child: InkWell(
+      child: InkWell(
         onTap: onPress,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20.0),
@@ -193,32 +192,32 @@ class _FaceMatchState extends State<FaceMatch> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 100),
-            width: double.infinity,
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  createImage(img1.image, () => showAlertDialog(context, true)),
-                  createImage(
-                      img2.image, () => showAlertDialog(context, false)),
-                  Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 15)),
-                  //createButton("Liveliness", () => captureImageFunc()),
-                  //captureImageFunc(),
-                  //createButton("Clear", () => clearResults()),
-                  Container(
-                      margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Similarity: $_similarity",
-                              style: const TextStyle(fontSize: 18)),
-                          Container(
-                              margin: const EdgeInsets.fromLTRB(20, 0, 0, 0)),
-                          Text("Liveliness: $_captureImage",
-                              style: const TextStyle(fontSize: 18))
-                        ],
-                      ))
-                ])),
-      );
+    body: Container(
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 100),
+        width: double.infinity,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              createImage(img1.image, () => showAlertDialog(context, true)),
+              createImage(
+                  img2.image, () => showAlertDialog(context, false)),
+              Container(margin: const EdgeInsets.fromLTRB(0, 0, 0, 15)),
+              //createButton("Liveliness", () => captureImageFunc()),
+              //captureImageFunc(),
+              //createButton("Clear", () => clearResults()),
+              Container(
+                  margin: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Similarity: $_similarity",
+                          style: const TextStyle(fontSize: 18)),
+                      Container(
+                          margin: const EdgeInsets.fromLTRB(20, 0, 0, 0)),
+                      Text("Live Captured: $_captureImage",
+                          style: const TextStyle(fontSize: 18))
+                    ],
+                  ))
+            ])),
+  );
 }
