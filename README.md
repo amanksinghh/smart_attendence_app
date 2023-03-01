@@ -1,6 +1,6 @@
 # smart_attendence_app
 
-Attendence Capturing app which uses face auth to capture attendence
+Attendance Capturing app which uses face auth to capture attendance
 
 ## Getting Started
 

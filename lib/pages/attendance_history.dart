@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:month_year_picker/month_year_picker.dart';
 import 'package:smart_attendence_app/pages/attendance_summary/daily_page.dart';
 
 import '../theme/colors.dart';
